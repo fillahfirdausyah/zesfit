@@ -1,5 +1,5 @@
 /**
- * Copied from JoyoRogo (packages/ui/src/components/input.tsx), adapted for JoyoFit Studio: imports point at local modules.
+ * Copied from JoyoRogo (packages/ui/src/components/input.tsx), adapted for Zesfit Studio: imports point at local modules.
  */
 import { Input as InputPrimitive } from "@base-ui/react/input";
 import { cn } from "@/ui/utils";

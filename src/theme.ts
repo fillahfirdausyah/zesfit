@@ -1,17 +1,16 @@
 import { Platform, useColorScheme } from 'react-native';
 
 /**
- * JoyoFit design tokens. Same family as JoyoRogo design v2: warm paper canvas, borderless white
+ * Zesfit design tokens: warm paper canvas, borderless white
  * cards with large radii, Plus Jakarta Sans, one primary plus data colors that only tell metrics
  * apart, each with a soft tint (chip and tile backgrounds) and a darker `*Text` shade that passes AA
  * on that tint.
  *
  * The twist is the device feel:
- * - Primary is an ink teal (#0A6580), not JoyoRogo's leaf green. It reads as the glass of a watch
- *   next to JoyoRogo's food green and doubles as the steps color, the way green is "makan" there.
- * - Sleep stays indigo (#5C69BC, JoyoRogo's "tidur") so the same metric has the same color in both apps.
- * - Heart is rose, workouts amber, link/battery green. Status green is a state color, so it is not
- *   JoyoRogo's brand green either.
+ * - Primary is an ink teal (#0A6580). It reads as the glass of a watch and doubles
+ *   as the steps color.
+ * - Sleep is indigo (#5C69BC).
+ * - Heart is rose, workouts amber, link/battery green. Status green is a state color.
  * - The watch hero is an ink "screen" panel in both themes (`hero*`), the one place that is dark in
  *   light mode, so the live numbers read like a watch face.
  *

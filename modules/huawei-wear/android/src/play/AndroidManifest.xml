@@ -1,5 +1,5 @@
 <!--
-  Google Play distribution (JOYOFIT_DISTRIBUTION=play): permissions Play's policy restricts or that need a call log
+  Google Play distribution (ZESFIT_DISTRIBUTION=play): permissions Play's policy restricts or that need a call log
   to be useful are removed from the merged manifest. See docs/play-store.md.
   SEND_SMS / READ_CALL_LOG: Play allows them only for default SMS/phone handlers or approved exceptions.
   READ_CONTACTS: only used to turn the caller number into a name; without READ_CALL_LOG Android gives the app no number.

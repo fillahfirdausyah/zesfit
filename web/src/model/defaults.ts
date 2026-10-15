@@ -211,5 +211,5 @@ export const ELEMENT_LABELS: Record<ElementType, string> = {
 /** A `.hwt` file name: letters and digits only, as Huawei requires. */
 export function hwtFileName(name: string): string {
   const base = name.replace(/[^A-Za-z0-9]/g, "");
-  return base.length > 0 ? base : "JoyoFitFace";
+  return base.length > 0 ? base : "ZesfitFace";
 }

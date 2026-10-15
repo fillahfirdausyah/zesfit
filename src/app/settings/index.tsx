@@ -56,12 +56,6 @@ const GROUPS: readonly SettingsGroup[] = [
         href: '/settings/safety',
       },
       {
-        title: 'Meals on watch',
-        subtitle: 'JoyoRogo diary and calorie target on the watch',
-        icon: 'restaurant',
-        href: '/settings/meals',
-      },
-      {
         title: 'Goals and reminders',
         subtitle: 'Steps, calories, exercise, stand, ring reminders',
         icon: 'flag',
@@ -73,8 +67,8 @@ const GROUPS: readonly SettingsGroup[] = [
     title: 'You and your data',
     data: [
       {
-        title: 'Health Connect and cloud',
-        subtitle: 'Share data with other apps, back up',
+        title: 'Health Connect',
+        subtitle: 'Share data with other apps',
         icon: 'heart',
         tint: 'heart',
         href: '/settings/health',

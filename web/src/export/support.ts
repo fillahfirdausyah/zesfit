@@ -1,4 +1,4 @@
-import { VALUE_TYPE, valueTypeInfo } from "@joyofit/hwt";
+import { VALUE_TYPE, valueTypeInfo } from "@zesfit/hwt";
 import type { Element, HandKind, RingSource, WidgetSource } from "@/model/types";
 
 /**

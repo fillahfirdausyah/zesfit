@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://fit.joyorogo.com/sitemap.xml

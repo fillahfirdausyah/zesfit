@@ -13,7 +13,7 @@ import { HuaweiWear } from '@/wear';
 type Busy = 'github' | 'share' | null;
 
 /**
- * JoyoFit is tested on one watch; owners of other models make it work on theirs by sending what their watch answered.
+ * Zesfit is tested on one watch; owners of other models make it work on theirs by sending what their watch answered.
  * "Report on GitHub" opens a prefilled issue in the browser (the user reviews and submits it with their own account);
  * the log is too long for the link, so it goes to the clipboard to paste into the issue's Log field.
  */
@@ -45,13 +45,13 @@ export function SupportReportSection() {
   const shareText = () =>
     run('share', async () => {
       const report = await HuaweiWear.getSupportReport();
-      await Share.share({ title: 'JoyoFit support report', message: reportText(report) });
+      await Share.share({ title: 'Zesfit support report', message: reportText(report) });
     });
 
   return (
     <Section title="Help support your watch" icon="chatbubbles">
       <AppText variant="caption" muted>
-        JoyoFit is tested on the Huawei Watch Fit 4 Pro. Other Huawei and Honor watches are experimental. If something
+        Zesfit is tested on the Huawei Watch Fit 4 Pro. Other Huawei and Honor watches are experimental. If something
         does not work, connect once, then send a report. It lists what your watch answered on its last connect, without
         Bluetooth addresses or the serial number.
       </AppText>

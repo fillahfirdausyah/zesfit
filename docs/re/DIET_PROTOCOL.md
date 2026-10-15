@@ -9,7 +9,7 @@ Class names are R8-obfuscated (`defpackage.fbj` etc.); the names below are the o
 ## 1. Answer in one paragraph
 
 The calorie-management / "weight management" screen on the watch (watch-side app id `hw.sport.dietcal`) is fed through the
-**DataSync service `0x37`**, the same service JoyoFit already uses for find-my-watch. No P2P, no file transfer, no new service.
+**DataSync service `0x37`**, the same service Zesfit already uses for find-my-watch. No P2P, no file transfer, no new service.
 Huawei Health calls these "Sample" commands: `0x37/01` SampleConfig, `0x37/02` SampleEvent, `0x37/03` SamplePoint,
 `0x37/04` DictionaryPointInfo, `0x37/05` CompactDataDictionary. The per-meal calories are a **SamplePoint (`0x37/03`)**
 with dictionary type `600002` (`DIET_RECORD_SET`), whose single value is a **UTF-8 JSON array** of meals
@@ -79,7 +79,7 @@ cmd.a(SendMode.PROTOCOL_TYPE_5A)
 - `55 = 0x37` = DataSync (matches Gadgetbridge `DataSync.id = 0x37`) [H]. Incoming dispatch: `ynw.a(...)` checks `bArr[0] == 55`, then `bArr[1]` = 1..5 [H].
 - TLV encoder `defpackage.cqe` with `cph`: tag = minimal big-endian bytes of the tag number; length = 7-bit varint (`0x80` continuation, big-endian groups); containers use tag `n + 0x80` (list `c(n)`, struct `d(n)`).
   `j(tag,int)` / struct `b(tag,int)` = fixed 4-byte big-endian int; `c(tag,int)` = minimal bytes; `g/a(tag,int)` = 1 byte; `c/b(tag,long)` = 8-byte big-endian; strings = UTF-8 [H].
-  This is the same TLV format `HuaweiTLV` in Gadgetbridge/JoyoFit speaks.
+  This is the same TLV format `HuaweiTLV` in Gadgetbridge/Zesfit speaks.
 - Gate bits (ExpandCapability, bit `n` = `bytes[n/8] & (1 << (n%8))`, identical to GB `supportsExpandCapability`): **83** SampleConfig, **84** SampleEvent, **85** SamplePoint, **173** DictionaryPointInfo, **307** CompactDataDictionary [H] (`ynw.e/a/d/c/e`). Diet-specific extension: **215** (`com.huawei.hms.kit.awareness.barrier.internal.e.a.N = 215`, used as `egs.e(deviceInfo, a.N)`) [H].
   The code only calls `sendSamplePointCommand` if bit 85 is set; `ynw.b(deviceInfo)` additionally rejects a null/not-connected device [H].
 - Frame type `SendMode.PROTOCOL_TYPE_5A` = the usual `5A` link frame, encrypted after auth like every other service [H for the 5A choice, M for "same encryption path"].
@@ -123,12 +123,12 @@ Watch request, `nkj.c(DeviceInfo, egd)`: SampleEvent with **eventId `80030003`**
 SampleEvent **`80030004`** on `hw.unitedevice.common` = watch asks for the VIP flag; phone answers (`fbj.a(...)`, `fbj.c(deviceInfo,int)`) with event `80030004`, src `hw.unitedevice.common`, data = 1 byte `0|1|2` [H].
 A SampleDictionary request (`0x37/04`, type `500018`) is answered with resting-metabolism points (`nkj.d(efw)`) [H].
 
-So the intake flow in the reverse direction (watch logs a meal) exists too. That is more than JoyoFit needs, but it is the same service.
+So the intake flow in the reverse direction (watch logs a meal) exists too. That is more than Zesfit needs, but it is the same service.
 
 ## 3. Byte-level spec
 
 Everything below is the **plaintext payload** `service | command | TLV...` that goes inside the usual `5A | len | ... | CRC16` frame
-(and AES layer) that JoyoFit already produces. Integers big-endian. TLV length is a varint (1 byte < 0x80, else 2 bytes `((n>>7)|0x80), (n&0x7F)`).
+(and AES layer) that Zesfit already produces. Integers big-endian. TLV length is a varint (1 byte < 0x80, else 2 bytes `((n>>7)|0x80), (n&0x7F)`).
 
 ### 3.1 SamplePoint, meal intake (`37 03`), phone -> watch
 
@@ -204,7 +204,7 @@ Watch->phone direction: same layout; Huawei's parser (`ynw.b`) reads tags 1, 2, 
 | ExpandCapability bit 215 | extra meal slots (11/21/31) and watch quick-log reply | `egs.e(deviceInfo, 215)` [H] |
 | ExpandCapability bit 173 | dictionary points (resting metabolism, weight) | `ynw.c` [H] |
 | Watch supports `hw.sport.dietcal` app | unknown; not checked in the send path, only by the bits above | [L] |
-| Phone-side feature gate | `iyn.b()` / `WeightApi.isSupportDiet` (account, region, network, not minor) | irrelevant to JoyoFit |
+| Phone-side feature gate | `iyn.b()` / `WeightApi.isSupportDiet` (account, region, network, not minor) | irrelevant to Zesfit |
 | `SupportedServices` list | **service `0x37` is not in the Watch Fit 4 Pro list** you recorded (`...30 32 34 35`), yet find-my-watch already works on `0x37`; so the real gate is ExpandCapability, not that list [M] | |
 
 Do **not** send unless bits 83 (config), 85 (point) are present in the ExpandCapability bitmap; read bit 215 before using slots 11/21/31.
@@ -224,11 +224,11 @@ Do **not** send unless bits 83 (config), 85 (point) are present in the ExpandCap
 
 Static analysis cannot show what the watch UI needs. Cheapest verification first.
 
-**Step A (preferred, no Huawei Health involved): send from JoyoFit and watch the watch.**
-1. Check ExpandCapability bits 83, 85, 215 in JoyoFit's log for the connected Watch Fit 4 Pro (JoyoFit already stores `expandCapabilities`).
+**Step A (preferred, no Huawei Health involved): send from Zesfit and watch the watch.**
+1. Check ExpandCapability bits 83, 85, 215 in Zesfit's log for the connected Watch Fit 4 Pro (Zesfit already stores `expandCapabilities`).
 2. Send `0x37/01` with `900300023` (3.2, use a plausible goal), then `0x37/03` (3.1) with one real meal. Open the watch's calorie / weight management screen.
 3. Log every `0x37` reply from the watch (look for tag `7F`). Iterate: add/remove config, `sugRange`, `hasFood`.
-4. Also try the watch -> phone request: open the diet card on the watch and watch for `0x37/02` with `eventId 80030003`; log its JSON (`event`, `startTime`, `endTime`). That tells you when the watch wants data, which is what JoyoFit should answer.
+4. Also try the watch -> phone request: open the diet card on the watch and watch for `0x37/02` with `eventId 80030003`; log its JSON (`event`, `startTime`, `endTime`). That tells you when the watch wants data, which is what Zesfit should answer.
 
 **Step B (only if A is ambiguous): capture Huawei Health's own traffic.**
 1. On the Xiaomi (HyperOS): Settings -> About phone -> tap OS version 7x for Developer options -> Additional settings -> Developer options -> enable **Bluetooth HCI snoop log** (full), toggle Bluetooth off/on.
@@ -237,9 +237,9 @@ Static analysis cannot show what the watch UI needs. Cheapest verification first
 4. Open in Wireshark, filter `btatt`. **The link payload is AES encrypted** after auth, so Wireshark shows ciphertext. To read it you need the session key: not obtainable from the snoop. Therefore Step B is only useful to confirm **timing and packet counts** (a burst of writes right after the meal is saved), not content. Content confirmation must come from Step A.
 5. Optional on the phone: Huawei Health release logs (`R_DietRecordHelper`, `SampleCommandManager`) already print the sample point and the config (`cpm.c("SampleCommandManager", cmd.b(), "sendSampleConfigCommand commandMessage: ")` logs the **plaintext** bytes of config and dictionary commands). If Huawei Health exposes a log export (Me -> Settings -> About -> tap version repeatedly, [INFERENCE]), that yields the plaintext frame.
 
-**A Huawei-side capture is not required to start.** It is only required if JoyoFit's Step A packets are rejected or ignored and the cause is unclear.
+**A Huawei-side capture is not required to start.** It is only required if Zesfit's Step A packets are rejected or ignored and the cause is unclear.
 
-## 7. Implementation outline for JoyoFit (not done here, no source touched)
+## 7. Implementation outline for Zesfit (not done here, no source touched)
 
 - Add `DataSync.SamplePoint.Request` (tags above) next to `ConfigCommand`/`EventCommand`; add a builder in `HuaweiDataSyncCommon` for meals JSON.
 - Add a DataSync handler for incoming `0x37/02` events from `hw.unitedevice.weightMgr`; on `event:1` answer with the day's SamplePoint.

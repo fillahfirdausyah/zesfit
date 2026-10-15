@@ -76,7 +76,7 @@ export interface DietStatus {
   lastResult: string | null;
   /** Watch-logged meals JS has not yet confirmed with `markWatchMealsSynced`. */
   unsyncedWatchMeals: number | null;
-  /** The meals behind `unsyncedWatchMeals` (recent days): write them to JoyoRogo, then `markWatchMealsSynced` their ids. */
+  /** The meals behind `unsyncedWatchMeals` (recent days): store them, then `markWatchMealsSynced` their ids. */
   pendingWatchMeals: WatchLoggedMeal[] | null;
   /** What the connected watch's ExpandCapability allows; null when no watch is connected. */
   supported: {

@@ -1,6 +1,6 @@
-# @joyofit/hwt
+# @zesfit/hwt
 
-Lossless TypeScript codec for Huawei `.hwt` watch-face packages, written for JoyoFit Studio (Huawei Watch Fit 4 Pro,
+Lossless TypeScript codec for Huawei `.hwt` watch-face packages, written for Zesfit Studio (Huawei Watch Fit 4 Pro,
 screen code `HWHD13`, 408 x 480). Pure `Uint8Array`/`DataView` plus [fflate](https://github.com/101arrowz/fflate):
 runs in browsers, Workers and React Native/Hermes. The CLI and the tests need Bun.
 
@@ -34,7 +34,7 @@ A `.hwt` is a zip. Entries in the samples, in this order: `com.huawei.watchface`
 - `com.huawei.watchface` is **either** the binary itself (*flat*; all Fit 4 Pro, GT6, Band 9, version 1 samples) **or** a
   zip that holds `watchface.bin` next to the Theme Studio project: `watchface/res/A100_NNN.png`,
   `watchface/watch_face_config.xml` (XML form of the layout), `watchface/watch_face_info.xml` (*nested*; the 2 GT3 samples).
-  Gadgetbridge (`HuaweiFwHelper.parseAsWatchFace`) and JoyoFit's `WatchfacePackage.kt` accept both and send only
+  Gadgetbridge (`HuaweiFwHelper.parseAsWatchFace`) and Zesfit's `WatchfacePackage.kt` accept both and send only
   `watchface.bin` for nested ones. [verified for the samples; which one Theme Studio Pro exports for HWHD13: unknown]
 - Honor packages use root element `HnTheme` and `com.honor.watchface` (from Gadgetbridge; no sample).
 - `hashCode` (GT3 samples): comma separated upper-case SHA-256 of `description.xml`, `com.huawei.watchface`,
@@ -169,7 +169,7 @@ Enum images are indexed by value (`images[v]`); weekday and month tables have an
 ## API
 
 ```ts
-import { readHwt, writeHwt, createHwt, FaceBuilder, VALUE_TYPE, verifyWatchface, checkFit4Limits } from "@joyofit/hwt";
+import { readHwt, writeHwt, createHwt, FaceBuilder, VALUE_TYPE, verifyWatchface, checkFit4Limits } from "@zesfit/hwt";
 ```
 
 | Area | Functions |
@@ -210,12 +210,12 @@ Huawei's guide: background and time are mandatory for the store, date/widgets op
 
 Run on the export (`F.hwt`), in this order; each line says what the answer decides.
 
-1. `bun src/cli.ts info F.hwt` — **container**: flat or nested? If nested, does JoyoFit's `WatchfacePackage.kt` (sends `watchface.bin` only) and Gadgetbridge's install path still produce a face the Fit 4 Pro accepts? Huawei's own docs call `watchface.bin` the "resource package" for 2.y.z faces, so a nested export is plausible. Also: which extra entries (`ability.xml`, `hashCode`) exist.
+1. `bun src/cli.ts info F.hwt` — **container**: flat or nested? If nested, does Zesfit's `WatchfacePackage.kt` (sends `watchface.bin` only) and Gadgetbridge's install path still produce a face the Fit 4 Pro accepts? Huawei's own docs call `watchface.bin` the "resource package" for 2.y.z faces, so a nested export is plausible. Also: which extra entries (`ability.xml`, `hashCode`) exist.
 2. Same output — **header**: `version` 2, `reserved` 0, **signature** bytes (does `55 55 55 55 01 00 00 01` still hold?), "consistency ok", table tiling (no "IRREGULAR").
 3. `bun src/cli.ts roundtrip F.hwt` — must print `package byte-identical` and `re-encode reproduces the original bytes with minRun 4 for N, only with minRun 2 for 0`. A different encoder policy or a non-8888 magic (the `info` image list shows `?` opacity) means the image codec needs another mode for this device.
 4. `bun src/cli.ts dump-layout F.hwt | grep -c '\$unknown'` — must be 0. Any `$unknown`, or root fields `screen_size`/`styles`/`colors` (colour/style customisation 2.0 is listed for HWHD13), is new schema territory: send the dump.
 5. `info` — **previews/thumbnail**: slot 0 size (228 x 269?), `preview/*.jpg` sizes (816 x 960 / 331 x 390?), `res.png` presence, `description.xml` `<version>` (2.1.z?) and `<font>`.
 6. `info` — **limits** line: confirm the exported face is inside `FIT4_LIMITS`; compare the estimated layer size (`est. layer`) with the number Theme Studio Pro shows for the face to validate the model (then promote it from warning to error, or fix the costs).
 7. **value ids**: export faces that use one data type each (steps, heart rate, calories, battery, distance, weather 28 types, AM/PM, seconds, dual time, ...) and diff `describeLayout` output; add the ids to `VALUE_TYPES` and mark `verified`. Especially: 158/159/160, 53, 72, 73, 150/153 vs Hour 24 ratio, 248 (11 vs 28 weather types), and the text-data ids (231, 232).
-8. **Hardware matrix** (install with the JoyoFit app / Gadgetbridge on a Fit 4 Pro): (a) the export untouched, re-serialised by `writeHwt`; (b) the export with one background replaced via `replaceImage` (same size, then different size); (c) the export plus `addStaticImage`; (d) a minimal `FaceBuilder` face (background + hour/minute `digits`) with and without AOD layers; (e) the same with `ambient: "both"` replaced by AMBIENT_NORMAL; (f) a face with widgets without containers. Each answers one "not established" item above.
+8. **Hardware matrix** (install with the Zesfit app / Gadgetbridge on a Fit 4 Pro): (a) the export untouched, re-serialised by `writeHwt`; (b) the export with one background replaced via `replaceImage` (same size, then different size); (c) the export plus `addStaticImage`; (d) a minimal `FaceBuilder` face (background + hour/minute `digits`) with and without AOD layers; (e) the same with `ambient: "both"` replaced by AMBIENT_NORMAL; (f) a face with widgets without containers. Each answers one "not established" item above.
 9. `hashCode`: if the export has one, decide the 4th digest's input (try `watchface.bin`, the PNG list, `watch_face_config.xml`); it is only required if the watch verifies it, and the Fit 4 Pro samples have none.

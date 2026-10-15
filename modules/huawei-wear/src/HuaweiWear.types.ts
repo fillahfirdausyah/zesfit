@@ -14,9 +14,9 @@ export type LinkState =
 export type AuthMode = 'normal' | 'hichain-lite' | 'hichain' | 'hichain3';
 
 /**
- * How far JoyoFit gets with a watch model: `tested` on a real watch; `experimental` in Gadgetbridge's device list and on
- * the Bluetooth link JoyoFit speaks, never tried; `unknown` a Huawei or Honor name in no list, tried like a Huawei watch;
- * `unsupported` JoyoFit cannot talk to it (see `reason`).
+ * How far Zesfit gets with a watch model: `tested` on a real watch; `experimental` in Gadgetbridge's device list and on
+ * the Bluetooth link Zesfit speaks, never tried; `unknown` a Huawei or Honor name in no list, tried like a Huawei watch;
+ * `unsupported` Zesfit cannot talk to it (see `reason`).
  */
 export type ModelSupport = 'tested' | 'experimental' | 'unknown' | 'unsupported';
 
@@ -175,7 +175,7 @@ export interface UserProfile {
 
 export type HealthConnectAvailability = 'available' | 'update-required' | 'unavailable';
 
-/** Health Connect record types JoyoFit writes; also the names in `granted` / `missing`. */
+/** Health Connect record types Zesfit writes; also the names in `granted` / `missing`. */
 export type HealthConnectRecordType =
   | 'Steps'
   | 'HeartRate'
@@ -186,7 +186,7 @@ export type HealthConnectRecordType =
   | 'SleepSession'
   | 'ExerciseSession';
 
-/** State of the Health Connect export (write only; JoyoFit never reads Health Connect). */
+/** State of the Health Connect export (write only; Zesfit never reads Health Connect). */
 export interface HealthConnectStatus {
   /** `update-required`: the Health Connect app on the phone must be updated first. */
   availability: HealthConnectAvailability;
@@ -342,7 +342,7 @@ export interface LiveWorkout {
   id: number;
   status: LiveWorkoutStatus;
   /**
-   * `watch`: the watch's own numbers. `gps` / `manual`: JoyoFit's session on the watch's realtime heart rate, started
+   * `watch`: the watch's own numbers. `gps` / `manual`: Zesfit's session on the watch's realtime heart rate, started
    * because the watch asked for the phone's GPS or by hand; time is counted by the phone and calories are estimated.
    */
   source: 'watch' | 'gps' | 'status' | 'manual';
@@ -375,7 +375,7 @@ export interface LiveWorkout {
   descentM: number | null;
   aerobicTe: number | null;
   anaerobicTe: number | null;
-  /** JoyoFit's estimate (the watch sends no such figure): grams of fat and carbohydrate burned so far. */
+  /** Zesfit's estimate (the watch sends no such figure): grams of fat and carbohydrate burned so far. */
   fatGrams: number;
   carbGrams: number;
   /** Share of energy from fat at the current heart rate, 0 to 1, same estimate. */

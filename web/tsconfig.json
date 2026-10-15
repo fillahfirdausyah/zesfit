@@ -16,7 +16,7 @@
     "types": ["vite/client", "node"],
     "paths": {
       "@/*": ["./src/*"],
-      "@joyofit/hwt": ["../packages/hwt/src/index.ts"]
+      "@zesfit/hwt": ["../packages/hwt/src/index.ts"]
     }
   },
   "include": ["src", "e2e", "*.ts"]

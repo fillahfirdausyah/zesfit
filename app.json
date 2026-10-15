@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "JoyoFit",
-    "slug": "joyofit",
+    "name": "Zesfit",
+    "slug": "zesfit",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "joyofit",
+    "scheme": "zesfit",
     "userInterfaceStyle": "automatic",
     "platforms": ["android"],
     "android": {
-      "package": "com.joyodigitama.joyofit",
+      "package": "com.fillx.zesfit",
       "allowBackup": false,
       "adaptiveIcon": {
         "backgroundColor": "#F9F6F1",
@@ -43,8 +43,6 @@
           }
         }
       ],
-      "expo-secure-store",
-      "expo-web-browser",
       "expo-font",
       [
         "expo-splash-screen",
@@ -58,10 +56,6 @@
           }
         }
       ]
-    ],
-    "extra": {
-      "joyorogoUrl": "https://api.joyorogo.com",
-      "cloudUrl": "https://joyofit-api.dzulfikar-at.workers.dev"
-    }
+    ]
   }
 }

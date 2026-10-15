@@ -15,13 +15,11 @@ import { useColorScheme } from 'react-native';
 
 import { migrate } from '@/db/migrations';
 import { serializeQueries } from '@/db/serialize';
-import { CloudProvider } from '@/state/CloudProvider';
 import { LiveWorkoutProvider } from '@/state/LiveWorkoutProvider';
-import { MealsProvider } from '@/state/MealsProvider';
 import { WatchProvider } from '@/state/WatchProvider';
 import { fonts, useColors } from '@/theme';
 
-const DATABASE_NAME = 'joyofit.db';
+const DATABASE_NAME = 'zesfit.db';
 
 /** Schema first, then one query at a time on the shared handle (see `serialize.ts`). */
 async function initDatabase(db: SQLiteDatabase): Promise<void> {
@@ -54,8 +52,6 @@ export default function RootLayout() {
     <Suspense fallback={null}>
       <SQLiteProvider databaseName={DATABASE_NAME} onInit={initDatabase} useSuspense>
         <WatchProvider>
-          <CloudProvider>
-            <MealsProvider>
               <LiveWorkoutProvider>
                 <StatusBar style="auto" />
                 {/* Keyed by scheme: the tab bar kept its first colors when the theme flipped while the app was open. */}
@@ -120,8 +116,6 @@ export default function RootLayout() {
                   <Tabs.Screen name="workout-live" options={{ href: null }} />
                 </Tabs>
               </LiveWorkoutProvider>
-            </MealsProvider>
-          </CloudProvider>
         </WatchProvider>
       </SQLiteProvider>
     </Suspense>

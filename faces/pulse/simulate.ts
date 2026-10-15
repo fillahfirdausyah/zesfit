@@ -296,7 +296,7 @@ if (import.meta.main) {
     const i = args.indexOf(name);
     return i >= 0 ? args[i + 1] : undefined;
   };
-  const file = args.find((a, i) => !a.startsWith("--") && !(i > 0 && args[i - 1]!.startsWith("--"))) ?? new URL("./dist/JoyoFitPulse.hwt", import.meta.url).pathname;
+  const file = args.find((a, i) => !a.startsWith("--") && !(i > 0 && args[i - 1]!.startsWith("--"))) ?? new URL("./dist/ZesfitPulse.hwt", import.meta.url).pathname;
   const out = flag("--out") ?? "/tmp/pulse-sim.png";
   const data: SampleData = { ...SAMPLE, second: Number(flag("--seconds") ?? SAMPLE.second) };
   const pkg = readHwt(new Uint8Array(readFileSync(file)));

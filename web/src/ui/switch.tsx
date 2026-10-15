@@ -1,5 +1,5 @@
 /**
- * Copied from JoyoRogo (apps/web/src/components/kit/switch.tsx), adapted for JoyoFit Studio: imports point at local modules.
+ * Copied from JoyoRogo (apps/web/src/components/kit/switch.tsx), adapted for Zesfit Studio: imports point at local modules.
  */
 import { cn } from "@/ui/utils";
 

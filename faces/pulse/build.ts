@@ -1,12 +1,12 @@
 /**
- * Builds JoyoFitPulse.hwt for the Huawei Watch Fit 4 Pro (HWHD13, 408 x 480).
+ * Builds ZesfitPulse.hwt for the Huawei Watch Fit 4 Pro (HWHD13, 408 x 480).
  *
  *   bun faces/pulse/build.ts
  *
- * Output: faces/pulse/dist/JoyoFitPulse.hwt, faces/pulse/dist/sprites/*.png (1x sprite sheet for inspection) and
+ * Output: faces/pulse/dist/ZesfitPulse.hwt, faces/pulse/dist/sprites/*.png (1x sprite sheet for inspection) and
  * faces/pulse/dist/spec.json (value types, positions, image table: what the Studio template needs).
  *
- * The layout is assembled with FaceBuilder from @joyofit/hwt (no lossless-JSON patching needed). Previews are drawn by the
+ * The layout is assembled with FaceBuilder from @zesfit/hwt (no lossless-JSON patching needed). Previews are drawn by the
  * layout simulator at 2x from hi-res renders of the very same sprites, so they cannot drift from the layout.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
@@ -72,10 +72,10 @@ const blackPreviews = (): Previews => {
 
 function assemble(previews: Previews) {
   const pkg = createHwt({
-    title: "JoyoFitPulse",
-    titleCn: "JoyoFit",
-    author: "JoyoDigitama",
-    designer: "JoyoDigitama",
+    title: "ZesfitPulse",
+    titleCn: "Zesfit",
+    author: "Fillx",
+    designer: "Fillx",
     screen: "HWHD13",
     version: "2.1.1",
     cover: previews.cover,
@@ -186,7 +186,7 @@ const previews: Previews = {
 // Pass 2: the real package.
 const { pkg, refNames } = assemble(previews);
 const bytes = writeHwt(pkg);
-writeFileSync(`${DIST}JoyoFitPulse.hwt`, bytes);
+writeFileSync(`${DIST}ZesfitPulse.hwt`, bytes);
 
 // Inspection artefacts.
 for (const s of cat.all) writeFileSync(`${SPRITES_DIR}${s.name}.png`, encodePng(s.render(1)));
@@ -200,10 +200,10 @@ const limits = checkFit4Limits(wf, binary.length, bytes.length);
 const used = usedImageIndices(getLayout(wf));
 
 const spec = {
-  face: "JoyoFitPulse",
+  face: "ZesfitPulse",
   screen: "HWHD13 408x480",
   version: pkg.description.version,
-  files: { hwt: "faces/pulse/dist/JoyoFitPulse.hwt", build: "faces/pulse/build.ts", design: "faces/pulse/design.ts", sprites: "faces/pulse/sprites.ts", simulator: "faces/pulse/simulate.ts" },
+  files: { hwt: "faces/pulse/dist/ZesfitPulse.hwt", build: "faces/pulse/build.ts", design: "faces/pulse/design.ts", sprites: "faces/pulse/sprites.ts", simulator: "faces/pulse/simulate.ts" },
   size: { hwtBytes: bytes.length, binaryBytes: binary.length, images: wf.images.length, usedImages: used.length, imageMemoryBytes: limits.imageMemoryBytes, largestImageBytes: limits.largestImageBytes, estLayerBytes: limits.layerBytes },
   aodLitPercent: Number((litFraction(renderFace(wf, { mode: "aod" })) * 100).toFixed(2)),
   elements: ["background (empty, black)", "widget: steps ring (data_type 10), heart-rate chip (11), battery chip (17)", "date: weekday + day", "time: hour/minute hero, seconds tick, AOD outline copies"],
@@ -226,7 +226,7 @@ const spec = {
 };
 writeFileSync(`${DIST}spec.json`, `${JSON.stringify(spec, null, 2)}\n`);
 
-console.log(`wrote ${DIST}JoyoFitPulse.hwt (${bytes.length} bytes)`);
+console.log(`wrote ${DIST}ZesfitPulse.hwt (${bytes.length} bytes)`);
 console.log(`watchface ${binary.length} B, ${wf.images.length} images (${used.length} used), image memory ${limits.imageMemoryBytes} B, largest image ${limits.largestImageBytes} B`);
 console.log(`verifyWatchface: ${JSON.stringify(report).slice(0, 300)}`);
 console.log(`limits ok=${limits.ok} problems=${JSON.stringify(limits.problems)} warnings=${JSON.stringify(limits.warnings)}`);

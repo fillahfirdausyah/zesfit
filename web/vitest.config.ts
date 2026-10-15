@@ -4,7 +4,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   resolve: {
     alias: {
-      "@joyofit/hwt": fileURLToPath(new URL("../packages/hwt/src/index.ts", import.meta.url)),
+      "@zesfit/hwt": fileURLToPath(new URL("../packages/hwt/src/index.ts", import.meta.url)),
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },

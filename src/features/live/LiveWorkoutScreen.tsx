@@ -130,10 +130,10 @@ function LiveBody({ live }: { live: LiveWorkout }) {
         </View>
         <FuelBar fatShare={live.fatShare} lead="Right now" />
         <AppText variant="caption" muted>
-          An estimate by JoyoFit, the watch does not measure it: each calorie is split by your heart rate at that moment, with a
+          An estimate by Zesfit, the watch does not measure it: each calorie is split by your heart rate at that moment, with a
           maximum of {live.maxHeartRate} bpm (220 minus your age from the profile). Easier effort burns a larger share of fat.
           {live.source !== 'watch'
-            ? ' The watch sends no live calories to JoyoFit, so they too come from its live heart rate, your weight, age and sex (Keytel 2005); the watch screen may differ.'
+            ? ' The watch sends no live calories to Zesfit, so they too come from its live heart rate, your weight, age and sex (Keytel 2005); the watch screen may differ.'
             : ''}
         </AppText>
       </Section>

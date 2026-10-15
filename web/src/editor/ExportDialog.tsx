@@ -53,7 +53,7 @@ export function ExportDialog({ open, onClose, project, sim }: { open: boolean; o
   const downloadHwt = () => {
     if (!result) return;
     downloadBlob(result.fileName, result.bytes, "application/octet-stream");
-    toast.success(`${result.fileName} downloaded`, { description: "Install it from JoyoFit: Watch faces, Install from file." });
+    toast.success(`${result.fileName} downloaded`, { description: "Install it from Zesfit: Watch faces, Install from file." });
   };
   const downloadDebug = () => {
     if (!result) return;

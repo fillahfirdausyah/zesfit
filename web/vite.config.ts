@@ -8,6 +8,6 @@ const hwt = fileURLToPath(new URL("../packages/hwt/src/index.ts", import.meta.ur
 
 export default defineConfig({
   plugins: [tailwindcss(), react(), cloudflare()],
-  resolve: { alias: { "@joyofit/hwt": hwt, "@": fileURLToPath(new URL("./src", import.meta.url)) } },
+  resolve: { alias: { "@zesfit/hwt": hwt, "@": fileURLToPath(new URL("./src", import.meta.url)) } },
   server: { port: 3100, fs: { allow: [".."] } },
 });

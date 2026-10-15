@@ -1,9 +1,9 @@
 {
-  "lockfileVersion": 2,
+  "lockfileVersion": 1,
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "@joyofit/faces",
+      "name": "@zesfit/faces",
       "devDependencies": {
         "@resvg/resvg-js": "^2.6.2",
         "@types/bun": "latest",

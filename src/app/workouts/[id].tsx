@@ -235,7 +235,7 @@ export default function WorkoutDetailScreen() {
               ) : null,
             )}
             <AppText variant="caption" muted>
-              An estimate by JoyoFit, the watch does not report it: the heart-rate zones of this workout, with a maximum of {maxHr}{' '}
+              An estimate by Zesfit, the watch does not report it: the heart-rate zones of this workout, with a maximum of {maxHr}{' '}
               bpm, are summed (Edwards TRIMP: zones 1 to 5 count 1 to 5 per minute) and mapped onto 0 to 21 like the strain of a
               day. Pauses over two minutes count for nothing. The added part is the strain of the day with this workout minus
               the strain of the day without its minutes, so the same workout adds less on a day that already carried load.
@@ -243,7 +243,7 @@ export default function WorkoutDetailScreen() {
           </>
         ) : (
           <Notice icon="heart-outline">
-            No heart-rate samples were stored for this workout, so JoyoFit cannot work out its strain.
+            No heart-rate samples were stored for this workout, so Zesfit cannot work out its strain.
           </Notice>
         )}
       </Section>
@@ -263,7 +263,7 @@ export default function WorkoutDetailScreen() {
             />
           ))}
           <AppText variant="caption" muted>
-            An estimate by JoyoFit, the watch does not measure it: the {formatCount(workout.calories)} kcal are split over the
+            An estimate by Zesfit, the watch does not measure it: the {formatCount(workout.calories)} kcal are split over the
             time you actually spent at each heart rate, with a maximum of {maxHr} bpm (220 minus your age from the
             profile). Easier effort burns a larger share of fat.
           </AppText>

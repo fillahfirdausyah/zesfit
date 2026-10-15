@@ -17,13 +17,13 @@ import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 import { cn } from "@/ui/utils";
 
-const HELP_SEEN = "joyofit-studio:help-seen";
+const HELP_SEEN = "zesfit-studio:help-seen";
 type Panel = "layers" | "stage" | "props";
 
 function useTheme(): [boolean, () => void] {
   const [dark, setDark] = useState(() => {
     try {
-      const saved = localStorage.getItem("joyofit-studio:theme");
+      const saved = localStorage.getItem("zesfit-studio:theme");
       return saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
     } catch {
       return false;
@@ -41,7 +41,7 @@ function useTheme(): [boolean, () => void] {
       document.head.append(style);
       setDark((d) => {
         try {
-          localStorage.setItem("joyofit-studio:theme", d ? "light" : "dark");
+          localStorage.setItem("zesfit-studio:theme", d ? "light" : "dark");
         } catch {
           // Theme still switches for this session.
         }
@@ -61,7 +61,7 @@ function Logo() {
         <path d="M32 22v10l6 4" stroke="#5FD3EE" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
       </svg>
       <span className="hidden text-[0.9375rem] font-extrabold tracking-tight sm:inline">
-        JoyoFit <span className="text-primary">Studio</span>
+        Zesfit <span className="text-primary">Studio</span>
       </span>
     </div>
   );

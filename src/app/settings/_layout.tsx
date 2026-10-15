@@ -13,9 +13,8 @@ export default function SettingsLayout() {
       <Stack.Screen name="notification-apps" options={{ title: 'Notification apps' }} />
       <Stack.Screen name="weather" options={{ title: 'Weather' }} />
       <Stack.Screen name="safety" options={{ title: 'Safety' }} />
-      <Stack.Screen name="health" options={{ title: 'Health & cloud' }} />
+      <Stack.Screen name="health" options={{ title: 'Health Connect' }} />
       <Stack.Screen name="profile" options={{ title: 'Profile and goal' }} />
-      <Stack.Screen name="meals" options={{ title: 'Meals on watch' }} />
       <Stack.Screen name="goals" options={{ title: 'Goals & reminders' }} />
       <Stack.Screen name="cycle" options={{ title: 'Cycle' }} />
       <Stack.Screen name="courses" options={{ title: 'Running courses' }} />

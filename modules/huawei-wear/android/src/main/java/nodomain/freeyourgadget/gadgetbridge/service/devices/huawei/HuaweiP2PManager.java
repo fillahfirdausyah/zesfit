@@ -44,7 +44,7 @@ public class HuaweiP2PManager {
         /** GB HuaweiState.supportsExpandCapability(int). */
         boolean supportsExpandCapability(int which);
 
-        /** Protocol log line (events.log in the app, so adb logcat -s JoyoFit shows it). */
+        /** Protocol log line (events.log in the app, so adb logcat -s Zesfit shows it). */
         void log(String message);
     }
 

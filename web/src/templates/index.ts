@@ -8,7 +8,7 @@ import { layoutOf } from "@/render/scene";
 
 /**
  * Starter faces designed for 408 x 480. Each is built from the same element factories the editor uses, so a
- * template is an ordinary project the user can change freely. Palette: JoyoFit's ink teal with per-metric colors.
+ * template is an ordinary project the user can change freely. Palette: Zesfit's ink teal with per-metric colors.
  */
 export interface Template {
   id: string;

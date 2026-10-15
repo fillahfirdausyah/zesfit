@@ -2,7 +2,7 @@
 
 These notes come from Gadgetbridge (upstream `bb7a1e83`, 2026-10-13). Nothing here has been
 captured from our own watch yet. Gadgetbridge lists the Watch Fit 4 and Fit 4 Pro as supported
-devices (`HuaweiJoyoFit4ProCoordinator`). When a capture from a real watch confirms or contradicts
+devices (`HuaweiWatchFit4ProCoordinator`). When a capture from a real watch confirms or contradicts
 something below, note it under **Observations**.
 
 ## Transport
@@ -12,7 +12,7 @@ something below, note it under **Observations**.
 | Link | Bluetooth Classic (BR/EDR) RFCOMM, **not BLE GATT** | `HuaweiBRCoordinator.getConnectionType() = BT_CLASSIC` |
 | SDP service UUID | `82FF3820-8411-400C-B85A-55BDB32CF060` | `HuaweiConstants.UUID_SERVICE_HUAWEI_SDP` |
 | Socket | `createRfcommSocketToServiceRecord` (secure, needs a bond) | `btbr/BtBRQueue.connect` |
-| Advertised name | `HUAWEI WATCH FIT 4-XXX` / `HUAWEI WATCH FIT 4 Pro-XXX` | `HuaweiConstants.HU_JOYOFIT4*_NAME` |
+| Advertised name | `HUAWEI WATCH FIT 4-XXX` / `HUAWEI WATCH FIT 4 Pro-XXX` | `HuaweiConstants.HU_WATCHFIT4*_NAME` |
 
 The BLE service `0xFE86` (`FE01` write / `FE02` notify) is how Huawei and Honor bands connect (`HuaweiLECoordinator`,
 `BleTransport`; Honor Band 7, 9 and 10 use Honor's own service, `isNewHonorProtocol`). The Fit 4 is a BR device, so that
@@ -57,10 +57,10 @@ ProductInfo with their own tag sets. None of this has been tried on a real band 
 | `07` | `03` | FitnessTotals | today's totals |
 | `07` | `02` | UserInfo | height, weight, age, birthday, gender, walk/run step lengths; sent in init when the profile was saved |
 | `07` | `01` | MotionGoal | daily step goal (goal type 1); the calorie and duration goals are not sent |
-| `07` | `16` / `17` / `1C` / `24` | TruSleep / EnableAutomaticHeartrate / EnableRealtimeHeartRate / EnableAutomaticSpo | one boolean (`01`), encrypted. GB sends these only when a setting changes (all default off, none in its init queue); JoyoFit sends TruSleep, continuous HR and SpO₂ on every connect when SupportedCommands lists them. `1C` is GB's realtime mode: it replaces `17` there and its boolean is the automatic-HR flag; JoyoFit sends `1C` on while Today is on screen and `1C` off + `17` (user's setting) after |
-| `07` | `1D` / `22` / `25` | HighHeartRateAlert / LowHeartRateAlert / LowSpoAlert | `01` enabled, `02` threshold bpm (only when enabled). GB offers high 100 to 150, low 40 to 50. JoyoFit sends the two heart-rate alerts at connect only when on, and on change; `25` has no setting in JoyoFit and is never sent |
+| `07` | `16` / `17` / `1C` / `24` | TruSleep / EnableAutomaticHeartrate / EnableRealtimeHeartRate / EnableAutomaticSpo | one boolean (`01`), encrypted. GB sends these only when a setting changes (all default off, none in its init queue); Zesfit sends TruSleep, continuous HR and SpO₂ on every connect when SupportedCommands lists them. `1C` is GB's realtime mode: it replaces `17` there and its boolean is the automatic-HR flag; Zesfit sends `1C` on while Today is on screen and `1C` off + `17` (user's setting) after |
+| `07` | `1D` / `22` / `25` | HighHeartRateAlert / LowHeartRateAlert / LowSpoAlert | `01` enabled, `02` threshold bpm (only when enabled). GB offers high 100 to 150, low 40 to 50. Zesfit sends the two heart-rate alerts at connect only when on, and on change; `25` has no setting in Zesfit and is never sent |
 | `07` / `17` | `23` / `17` | NotifyRestHeartRate / Workout NotifyHeartRate | capability notifications GB sends at init when `07/23` / `17/17` are listed: TLV `01` = int 1 / int 3 |
-| `07` | `1C` (pushed) | realtime heart rate | not parsed by GB. JoyoFit subscribes to `07/1C` and takes the first single-byte value of 30 to 250 from the TLV (containers searched too); the raw frame is in the log, so the real layout can be read from there |
+| `07` | `1C` (pushed) | realtime heart rate | not parsed by GB. Zesfit subscribes to `07/1C` and takes the first single-byte value of 30 to 250 from the TLV (containers searched too); the raw frame is in the log, so the real layout can be read from there |
 | `02` Notifications | `05` | NotificationCapabilities | only asked when `supportsPromptPushMessage` and protocol version 2 (GB default capability byte `0xFF` skips it) |
 | `02` | `02` | NotificationConstraints | content format and maximum content length; asked when `02/01` is supported and protocol version is 2 |
 | `02` | `04` | NotificationState | the watch-side notification switch (`0x81{02:on,03:on}`); sent in init and when forwarding is toggled, if `02/04` is supported |
@@ -166,7 +166,7 @@ Served: version 0 (`https://gllto.glpals.com/7day/v6/latest/lto.dat`, file `gpsl
 the entry minus its last `/segment`, gunzip, file `HW_AGNSS_RTCM_33`, 30 min cache). The other version 3 tags (`HW_PGNSS_PRED`,
 `HW_PGNSS_TRANS`, `HW_RSMC_*`, `HW_PRECSION_ION`) need Huawei's native decoder or an account credential and are declined with
 state 4, as Huawei Health reports a failed download. The real `HW_AGNSS` path and tag strings are only known once the watch sends
-them; they are logged to logcat (tag `JoyoFit`, `AGPS: consult tag=...`) and kept out of the shareable support log.
+them; they are logged to logcat (tag `Zesfit`, `AGPS: consult tag=...`) and kept out of the shareable support log.
 
 ### Live workout (`LiveWorkout.kt`, `LiveWorkoutCodec.kt`; Huawei Health 17.0.8.300 RE, UNVERIFIED on the Fit 4 Pro)
 
@@ -175,16 +175,16 @@ Huawei's "reverse linkage": a workout started on the watch, mirrored on the phon
 
 - `37/02` event `800400014` (control), data `{01 workoutType, 02 op (0 start, 1 stop, 2 resume, 3 report), 03 time ms,
   05 watch state (0 pre-sport, 1 running, 2 paused)}`. The phone answers start / stop / resume with the same event id and
-  `02 01 <op> 04 01 00` (code 0 accepts; Huawei rejects types other than 1, 2, 3, 5, 7, 15 and JoyoFit accepts all).
+  `02 01 <op> 04 01 00` (code 0 accepts; Huawei rejects types other than 1, 2, 3, 5, 7, 15 and Zesfit accepts all).
 - `37/02` events `800400002` start, `...03` stop, `...04` pause, `...05` resume, data `{01 time ms, 02 workoutType}`, no answer.
 - `37/03` points, one `86{87{08 dict field id, 09 big-endian value}}` list per push, no answer. Units: duration s, heart
   rate bpm, distance dm, calories cal (kcal x 1000), speed km/h x 100, pace s/km, step rate /min, steps, cycling cadence rpm,
   altitude m (signed in 4 bytes), climb / descent m, training effect x 10, `50004770` state (1 running, 2 paused, 3 stopped).
 
 The watch pushes all of it unprompted; the phone sends nothing first. Sending the answer needs ExpandCapability 84. Huawei
-also announces reverse-capability bits 47..59 (55 = service `37`) that GB and JoyoFit do not: the first thing to try if the
+also announces reverse-capability bits 47..59 (55 = service `37`) that GB and Zesfit do not: the first thing to try if the
 watch never sends the start event. The watch sends no fat or carbohydrate figure and Huawei Health computes none; the fat
-and carbs on the live screen are JoyoFit's estimate (`SubstrateEstimator`: %HRmax to %VO2max after Swain, RER curve,
+and carbs on the live screen are Zesfit's estimate (`SubstrateEstimator`: %HRmax to %VO2max after Swain, RER curve,
 fat share `(1 - RER) / 0.3`, 9 and 4 kcal per gram).
 
 ## Weather
@@ -280,9 +280,9 @@ The cleartext TLVs the watch is sent are logged before encryption (`Watchface: W
 encryption: 01="…" 02="…" 03=01`, `Upload: FileInfoSend TLV before encryption: 01="…" 02=… 03=01 05="…" 06="…"`).
 
 **Package.** A `.hwt` is a zip with `description.xml` (root `HwTheme`, or `HnTheme` for Honor), `preview/cover.jpg` and
-`com.huawei.watchface` (`com.honor.watchface`). The SpaceRed and JoyoFit Pulse files hold the face binary directly in that entry
+`com.huawei.watchface` (`com.honor.watchface`). The SpaceRed and Zesfit Pulse files hold the face binary directly in that entry
 (it starts `02 00 …`); a nested zip holds `watchface.bin`. Huawei Health sends the inner `watchface.bin` when the entry is a zip
-and the watch has the dial-unite capability (`c2.a`, `unzipWatchFace`), otherwise the entry as it is; JoyoFit does the same. The
+and the watch has the dial-unite capability (`c2.a`, `unzipWatchFace`), otherwise the entry as it is; Zesfit does the same. The
 `screen` of `description.xml` is a theme version code; GB's table maps it to `height*width`, and the install is refused when it
 does not equal the watch's `WatchfaceParams` height and width. A code the table does not know is left to the watch. The
 `<version>` must have the watch's major version and a minor no higher than its maximum (`2.8.2` against `2.10`), or be listed
@@ -302,7 +302,7 @@ answered with another status than 0 / `100000` ends the install; `100007` and `1
 
 ### Why a face did not install (Watch Fit 4 Pro, Huawei Health 17.0.8.300 RE and phone logs)
 
-The upload itself was never the problem: `28/07` returned `02 = 1` (validity accepted) for SpaceRed and JoyoFit Pulse alike.
+The upload itself was never the problem: `28/07` returned `02 = 1` (validity accepted) for SpaceRed and Zesfit Pulse alike.
 
 1. **No announcement (GB flow).** Without the `27/03` the watch took the file and never sent `27/05`; the list stayed at 14 faces.
    Huawei Health always sends `27/03` first.
@@ -318,13 +318,13 @@ The upload itself was never the problem: `28/07` returned `02 = 1` (validity acc
    (`HwWatchFaceBtManager.setWatchfaceSignature`, `sendOperateType`). Huawei's own test procedure for `.hwt` files says to
    log in to Huawei Health with a Huawei developer account. A face whose id and version Huawei did not sign is therefore thrown
    away, however well the file is made; that includes SpaceRed. Whether a signature captured from Huawei Health could be replayed
-   (it names the account and a device id) is not known. JoyoFit cannot obtain a signature itself, but it can carry one: the
+   (it names the account and a device id) is not known. Zesfit cannot obtain a signature itself, but it can carry one: the
    announcement puts `installWatchface(uri, signature, fileName)`'s `signature` in tag `08` and installs under the signed face's
    `<id>_<version>` when `fileName` is given, which is the replay experiment.
 
 ### What the signature covers (static analysis of Huawei Health 17.0.8.300, nothing was sent to Huawei)
 
-Analysis only: JoyoFit never calls `getresourcesign` and implements nothing that fetches, forges or reuses a signature. The
+Analysis only: Zesfit never calls `getresourcesign` and implements nothing that fetches, forges or reuses a signature. The
 `signature` parameter of `installWatchface` quoted above exists in the code base and is outside this analysis.
 
 **Request** (`GetWatchFaceSignatureThread.g()`, built by `HwWatchfaceSignatureManager.a(hitopId, version, operateType, vipFree)`
@@ -371,7 +371,7 @@ valid one. Photo, video and kaleidoscope content is not a face and carries none 
 ### Editing a face's options (Huawei Health 17.0.8.300 RE; wire layout from source, the watch side UNVERIFIED)
 
 Status legend: **VERIFIED** = seen on the Fit 4 Pro; **UNVERIFIED** = read from Huawei Health's code only. Nothing in this section was
-verified on the watch yet: the watch left JoyoFit's bond while this was being built (HiChain op2 answered `errorCode -1`), so the
+verified on the watch yet: the watch left Zesfit's bond while this was being built (HiChain op2 answered `errorCode -1`), so the
 device test below is still to be run.
 
 Classes: `CustomConfigWatchFaceService` (`hwdevice.mainprocess.mgr.hwmywatchfacemgr.deviceside`: `queryCustomConfig`,
@@ -384,7 +384,7 @@ Classes: `CustomConfigWatchFaceService` (`hwdevice.mainprocess.mgr.hwmywatchface
 
 **Transport (UNVERIFIED).** DataSync `37/02` sample event, `01 src = hw.app.watchface.custom`, `02 wear = hw.watch.watchface.custom` for the
 phone's requests; level 0. The watch answers with `src = hw.watch.watchface.custom` (`isCheckPkgName`). Sending needs ExpandCapability 84
-(`ynw`, the same gate as every DataSync event); JoyoFit checks it and logs the decision (`FaceCustom: query <id>: ExpandCapability 84 …`).
+(`ynw`, the same gate as every DataSync event); Zesfit checks it and logs the decision (`FaceCustom: query <id>: ExpandCapability 84 …`).
 
 | Event | Direction | Data (event tag `05`, Huawei's own TLV: tag byte, 7-bit varint length, value; tag top bit = nested) |
 |---|---|---|
@@ -399,20 +399,20 @@ of tags. Order on the wire: `01`, `82`, `06`, `07`, `88`.
 
 **Modes** (`DIAL_EDIT_MODE_*`): 0 style, 1 background, 2 dual, 3 scale, 4 symbol, 5 typeface, 6 time, 7 hand. Huawei Health's model
 (`CustomStyle`) has no field for dual: on read, modes 2 and 3 both fill "scale"; on write the scale index is sent under mode 2 **and** mode 3
-(`buildEventDataStyleList`). JoyoFit keeps the watch's raw modes and sends exactly the modes it is given. On read, a style missing its mode or
+(`buildEventDataStyleList`). Zesfit keeps the watch's raw modes and sends exactly the modes it is given. On read, a style missing its mode or
 index is skipped, and a widget whose slot is not below the list size is skipped; widget options are taken in list order
 (`loadWidgetList`), so slot = position.
 
 **marketId** is the face id of the watch's face list (`27/02` tag `03`, ASCII digits): `WatchFaceWearService.handleWatchFaceTransferSuccess`
 compares the install params' `watchFaceId` with the `27/05` report's face id, and `CustomConfigWatchFaceService` compares its `marketId`
-with the same report's `WatchFaceIdReportInfo.getWatchFaceId()`. In JoyoFit that is `WatchfaceInfo.id`.
+with the same report's `WatchFaceIdReportInfo.getWatchFaceId()`. In Zesfit that is `WatchfaceInfo.id`.
 
 **Where the option lists come from.** Not from the watch. `queryCustomConfig` is a JavaScript bridge method the face's H5 editor page
 calls (`{deviceId, marketId}`); the page is Huawei's per-face editor (an `h5pro` mini-app, downloaded at runtime and not in the APK) and
 knows its own style / background / colour / widget lists. The watch's report carries only the selected index of each option, the
 modes the face exposes, a colour index when it has a palette and one option per widget slot. No count, no label. The list flags
 do not help: Huawei Health reads only type bits 0 (current), 1 (preset), 2 (can delete), 4 / 5 / 7 (video / album / kaleidoscope) and the
-expanded type; it never reads bit 3, the `editable` flag JoyoFit shows (`WatchFaceWearService.queryWatchFaceInfoList`). JoyoFit
+expanded type; it never reads bit 3, the `editable` flag Zesfit shows (`WatchFaceWearService.queryWatchFaceInfoList`). Zesfit
 therefore labels options by position and shows "Customize" on faces whose `editable` bit is set (UNVERIFIED that the bit means this).
 
 **Apply / ack flow.** `setCustomConfig` sends `800100009` and remembers the marketId; the callback fires with status 0 when
@@ -420,11 +420,11 @@ therefore labels options by position and shows "Customize" on faces whose `edita
 (`createWatchFaceReportCallback`). It has no timeout and no failure path. In Huawei Health's install flow the apply comes after the
 `27/03` announce says the face exists (`need-receive 0`, `handleWatchFaceExist`) or after the transfer, and the face is activated with
 `27/03` afterwards (`sendCustomConfigAndApplyWatchFace`). The phone's `onDataReceived` ignores any packet with `7f` other than `100000`
-(`SUCCEED_RESPONSE`); no other error code exists in these classes. JoyoFit instead (`WatchfaceCustomizer.apply`): sends `800100009`,
+(`SUCCEED_RESPONSE`); no other error code exists in these classes. Zesfit instead (`WatchfaceCustomizer.apply`): sends `800100009`,
 waits 2.5 s for a watch push, then queries and compares, and reports the parts the watch did not take; it does not subscribe to `27/05`
 (`FileUploader` owns that subscription during an install).
 
-**Device test (to run when the watch is bound to JoyoFit).** On a built-in editable face (Modules 2025, Maximum Modules): Watch →
+**Device test (to run when the watch is bound to Zesfit).** On a built-in editable face (Modules 2025, Maximum Modules): Watch →
 Watch faces → Customize. Expect `FaceCustom: report from the watch for face … styles=…` in the Log. Pick one option, Apply, and check
 the log line `apply …: The watch now reports the requested configuration.` and the watch screen; then Revert. Record: whether the
 watch answers a query for a face that is not active, which modes and widgets it reports, whether an index past the last option is
@@ -436,7 +436,7 @@ Classes: `AlbumWatchFaceManger` / `DiyWatchFace` (the flow), `DiyWatchFaceDevice
 `handleNewBackground`, `handleCustomData`, `handleOptionSelectedList`, `makeNewPhotoInfoCommand`, `combineWatchFaceBgListCommand`),
 `HwCommonFileMgr` (`defpackage.myu`, `handleDeviceRequest`, `d(String,int,int)`), `WatchFaceBitmapUtil` (the `.bin` encoders). The older
 `HwWatchFaceBtManager` / `WatchFacePhotoAlbumManager` path reads the photo list from `82{83}`; the Fit 4 Pro answers with `84{85}`, the
-layout `DiyWatchFaceDeviceService` reads, so that is the one JoyoFit follows.
+layout `DiyWatchFaceDeviceService` reads, so that is the one Zesfit follows.
 
 **Capability.** There is no capability tag: a face is a photo face when bit 5 (`0x20`) of its type in `27/02` is set
 (`getPhotoPackageName` returns the first such face). Video is bit 4, kaleidoscope bit 7, trial bit 6. The Watch Fit 4 Pro lists exactly one:
@@ -469,18 +469,18 @@ Header: `45 23`, then the format code (`88 88` image option 0, `88 08` option 1,
 
 `PhotoBin` (`PhotoFaceCodec.kt`) reproduces the three encoders; `PhotoFaceTest` compares its output with the bytes of the decompiled Huawei
 encoders, compiled unchanged and run on the same pixels. The option is the watch's tag `0b`; Huawei Health treats any value but 1 and 2 as 0.
-Max photos and the option are the watch's, not constants. Count and naming: names are free (Huawei's H5 page chooses them); JoyoFit uses `<epoch ms>.png`.
+Max photos and the option are the watch's, not constants. Count and naming: names are free (Huawei's H5 page chooses them); Zesfit uses `<epoch ms>.png`.
 
-**JoyoFit** (`PhotoFaceUploader.kt`, `PhotoFaceCodec.kt`, `packets/PhotoFace.java`, module functions `getPhotoFace`, `addPhoto`, `deletePhoto`,
+**Zesfit** (`PhotoFaceUploader.kt`, `PhotoFaceCodec.kt`, `packets/PhotoFace.java`, module functions `getPhotoFace`, `addPhoto`, `deletePhoto`,
 `setPhotoFaceActive`, screen Watch → Photo face): the picked picture is cropped on the phone (`CropEditor`, `expo-image-picker`,
 `expo-image-manipulator`) to the screen size and saved as PNG, native encodes the `.bin`, sends `27/09` with the old list plus the new
 name, serves the watch's `28/01` request and waits for the type 4 report. Delete sends `27/09` with the list minus the photo. The watch
-offers no preview, so JoyoFit keeps a copy of what it uploaded (`files/photoface`) for the screen. `27/09` echoes the settings the watch
+offers no preview, so Zesfit keeps a copy of what it uploaded (`files/photoface`) for the screen. `27/09` echoes the settings the watch
 reported in `27/08` (`PhotoFaceCodec.saveTlv`): a photo already on the watch keeps its per-photo values, a new one goes with index and
 name only, and the top-level indexes, wrist / apply-all switches, data slots and selected options go back unchanged. The smart / Gaussian
 fields are left out because the watch does not report the switch that decides them.
 
-**Device result (2026-10-14 23:10, first upload, before the echo).** JoyoFit sent `01=01 82{83{04=01 05="1791994229644.png"}} 06=02 07=01
+**Device result (2026-10-14 23:10, first upload, before the echo).** Zesfit sent `01=01 82{83{04=01 05="1791994229644.png"}} 06=02 07=01
 09=00`; the watch answered `08=01`, asked for the file, took the 585551-byte RGB24 `.bin` and reported `27/05` type 4 with 0 failed. It then
 listed the photo at index **0** with `0c=02` (= the position index), `0d=00`, `0e=01` (= the style index) and both colours `#00000000`, i.e.
 its own defaults. The photo shows as the face's background, but the watch keeps showing its "add photos / scan the QR code in Huawei Health"
@@ -513,10 +513,10 @@ reply). The code never sends without the matching bit and requires the device to
 
 When Huawei sends: after a diet record is saved, when cloud diet data syncs down, when the resting metabolism or the `900300022/23` config changes,
 and whenever the watch sends the `event:1` request. The watch's own burned-calorie / balance values are not sent back to the phone as far as the code
-shows. A Huawei-side capture is not needed to try this: send `37/01` then `37/03` from JoyoFit and watch the card; the link is encrypted, so an
+shows. A Huawei-side capture is not needed to try this: send `37/01` then `37/03` from Zesfit and watch the card; the link is encrypted, so an
 HCI snoop of Huawei Health only shows timing.
 
-### How JoyoFit sends it (`DietSync.kt`, `DataSyncService.kt`)
+### How Zesfit sends it (`DietSync.kt`, `DataSyncService.kt`)
 
 **Status: UNVERIFIED on the wire.** Packages: phone `hw.unitedevice.weightMgr`, watch `hw.sport.dietcal`. Inputs come from JS (`setDietDay`), the latest day is kept in `diet_day`.
 
@@ -533,7 +533,7 @@ The meal list is built as `fbj.getDeviceMealArray` does: meals of one type merge
 folded meal is summed into one entry `sugRange:[0, Σ max]`); for today, a placeholder (`hasFood:false`, `kiloCalorie:0.0`, `eatTime` = start of today in seconds) for each of 10, 20, 30 and (without bit 215) 40 that has none;
 at most 42 entries (unreachable here: one day, 7 types). Recommended ranges are `[round(lo·goal), round(hi·goal)]` from Huawei's built-in table for region `it`
 (`fbj.f35288a`, keyed manager type / "day has an extra meal of this group" / meal: e.g. maintain breakfast 0.20 to 0.26, lunch 0.40 to 0.47, dinner 0.30 to 0.35; extra slots 0 to 0.05).
-Huawei's table has **no** entry for the 40 slot (its range comes from a cloud config we do not have): JoyoFit uses `[0, round(0.05·goal)]`, so a 2000 kcal day gives `[0,100]` like the RE example. Without a goal the
+Huawei's table has **no** entry for the 40 slot (its range comes from a cloud config we do not have): Zesfit uses `[0, round(0.05·goal)]`, so a 2000 kcal day gives `[0,100]` like the RE example. Without a goal the
 placeholders carry `"sugRange":[]` (Huawei's empty `int[0]`) and logged meals omit it. `{"dietaryAnalysis":{"coefficient":1,"carbohydrates":g,"protein":g,"fat":g}}` goes in tag `0A` when any meal has macros.
 All JSON is compact, Gson field order, floats as `350.0`. Tested against the RE example bytes (`DataSyncCodecTest`, `DietSyncTest`).
 
@@ -553,7 +553,7 @@ All JSON is compact, Gson field order, floats as `350.0`. Tested against the RE 
 `37/01` configs from `hw.sport.config` to `in.huawei.motion` (GB's `HuaweiDataSyncGoals`, Huawei's `SportGoalMgr`): `900200006` steps, `900200007` calories (**kcal x 1000**, as GB), `900200008` exercise minutes,
 `900200009` stand hours, reminders `900200004` stand / `900200010` progress / `900200011` goal reached (1 / 0), each with data `01 time int32 s, 02 goal int32`, action 1. The bundle `900200002` (`mdn.d`) has
 data `01 time int32 s, 82{83{04 type, 05 value} x3}` with types 1 steps, 3 exercise minutes, 4 stand hours, type and value as **minimal** big-endian bytes (Huawei builds them with `HEXUtils.a(int)`).
-All are sent on every save and, once the user has saved goals in JoyoFit, on every connect (gate: ExpandCapability 83). Configs the watch sends back from `in.huawei.motion` / `hw.sport.config` update the stored goals. Defaults: 10 000 / 300 / 30 / 12 and reminders on
+All are sent on every save and, once the user has saved goals in Zesfit, on every connect (gate: ExpandCapability 83). Configs the watch sends back from `in.huawei.motion` / `hw.sport.config` update the stored goals. Defaults: 10 000 / 300 / 30 / 12 and reminders on
 (`mdn` itself falls back to 10 000 / 25 / 12 when nothing is stored; 30 minutes is the Huawei Health UI's default, [INFERENCE]).
 
 ### DataSync framework (`DataSyncCodec.kt`, `DataSyncService.kt`)
@@ -565,7 +565,7 @@ Find-my-watch still sends through GB's `DataSync.ConfigCommand`; only its (log-o
 
 ### Device test steps
 
-1. Save goals once in Settings → Goals and reminders (`Goals: saved ...`, eight `DataSync activity goal 9002000xx: config needs ExpandCapability 83: set` lines; before that, connect only logs `Goals: not sent on connect, no goals saved`). Then connect and `adb logcat -d -s JoyoFit:V | grep -E "DataSync|Diet:|Body:|Goals:|Health Glance"`. Expected on connect, about 1 s after `Connected`: `Goals: sending to the watch (connected)` and the same eight sends (`send hw.sport.config -> in.huawei.motion ids=...`);
+1. Save goals once in Settings → Goals and reminders (`Goals: saved ...`, eight `DataSync activity goal 9002000xx: config needs ExpandCapability 83: set` lines; before that, connect only logs `Goals: not sent on connect, no goals saved`). Then connect and `adb logcat -d -s Zesfit:V | grep -E "DataSync|Diet:|Body:|Goals:|Health Glance"`. Expected on connect, about 1 s after `Connected`: `Goals: sending to the watch (connected)` and the same eight sends (`send hw.sport.config -> in.huawei.motion ids=...`);
    `Diet: ExpandCapability 215 (extra meal slots 11/21/31) is set`, `Diet: meals (connected, 4 entries) = [{"eatTime":...`, `DataSync diet meals: point needs ExpandCapability 85: set`; with a JoyoRogo day stored also `DataSync diet config 900300023: config needs ExpandCapability 83: set`.
 2. Open the calorie card on the watch: `DataSync event from watch: src=... wear=hw.unitedevice.weightMgr id=80030003 ... data={"startTime":...,"event":1}` then `Diet: the watch asks for its meals (event 1 ...)` and another `DataSync diet meals` send. If instead `DataSync event: no handler for src=... wear=...` appears, the package names differ from the RE: copy them from that line.
 3. Quick-log a meal on the watch: `Diet: the watch quick-logged 1 meal(s): 10@...`, `DataSync diet quick-log reply: ... data={"punchResult":0,"event":6}`, an `onWatchMealLogged` and, with the app open, `Meals: 1 watch meal(s) written to JoyoRogo`.
@@ -574,7 +574,7 @@ Find-my-watch still sends through GB's `DataSync.ConfigCommand`; only its (log-o
 ## Fall detection, SOS texts, DST, sleep report, cycle calendar (from Huawei Health RE)
 
 **UNVERIFIED. Static analysis of Huawei Health 17.0.8.300 only (`/home/dzul/re/huawei-health/FEATURE_CANDIDATES.md` rows 4, 6, 7, 12, plus the
-classes named below); nothing was sent to a watch yet.** Every send and receive is logged (`adb logcat -d -s JoyoFit:V`). DataSync framing is the
+classes named below); nothing was sent to a watch yet.** Every send and receive is logged (`adb logcat -d -s Zesfit:V`). DataSync framing is the
 one of the calorie section: `01` phone package, `02` watch package, events `03` id int32 / `04` level byte / `05` data, configs
 `83{84{05 id, 06 action, 07 data, 08 modify ms}}`, dictionary rows `84{85{06 start ms, 07 end ms, 08 modify ms, 89{8A{0B key, 0C value}}}}`.
 
@@ -588,12 +588,12 @@ one of the calorie section: `01` phone package, `02` watch package, events `03` 
 | Cycle flow and cramps | `37/04` dictionary | `hw.unitedevice.physiological` / `hw.watch.health.physiological` | dict `400018`, field keys `400018149` flow and `400018771` cramps (from the APK's `assets/dict_config.txt`), value = 4-byte big-endian int | ExpandCapability 173 and 174 |
 
 Huawei Health answers DST **only** when the watch asks: `ndg.b()` (the sender) is called from `onDataReceived` alone, the two other callers
-of `ndg` (`mra`) only register the listener on connect. JoyoFit does the same: no push on connect or on a time-zone change.
+of `ndg` (`mra`) only register the listener on connect. Zesfit does the same: no push on connect or on a time-zone change.
 
 The sleep report's field mapping was read in `vgm.c(NotificationData, String, BaseNotification)`: `buu.i(title)` is tag 06, `buu.e(description)` 07,
 `buu.b("open app")` 08, `buu.c("ignore")` 09, the locale is `npn.e` (`lang-COUNTRY`), `buu.d(uri from=3)` 0b, `buu.a(uri from=4)` 0c. Huawei's
-URIs are `huaweischeme://healthapp/router/sleepDetail?from=3|4`; JoyoFit sends `joyofit://today` in both. Huawei's text comes from its own sleep score
-and translated strings; JoyoFit has no score, so the description is `7 h 12 min asleep, 23:41 to 06:53. Deep ..., REM ..., Light ....`.
+URIs are `huaweischeme://healthapp/router/sleepDetail?from=3|4`; Zesfit sends `zesfit://today` in both. Huawei's text comes from its own sleep score
+and translated strings; Zesfit has no score, so the description is `7 h 12 min asleep, 23:41 to 06:53. Deep ..., REM ..., Light ....`.
 
 ### Service 0x32 (menstrual calendar), `neh` / `nec` / `nej`
 
@@ -622,7 +622,7 @@ length = mean of the last 6 finished periods (5 with none), ovulation 14 days be
 Port of GB's P2P stack (`HuaweiP2PManager`, `HuaweiBaseP2PService`, `HuaweiP2PDataDictionarySyncService` and its dictionary handlers, `packets/P2P.java`,
 `HuaweiP2PSubMsg`), mounted on `HuaweiSession.subscribe(0x34, 0x01)` by `P2pStack`. **Status key:** *GB* = layout from Gadgetbridge, which runs it on other Huawei
 watches; *HH* = read from Huawei Health 17.0.8.300 (static analysis); *UNVERIFIED* = not yet seen on our watch. **Nothing in this section has been run against the Fit 4 Pro yet.**
-Every packet and decision is logged (`adb logcat -d -s JoyoFit:V`, lines `P2P tx` / `P2P rx` / `Health metric` / `Healthy Living` / `Courses`).
+Every packet and decision is logged (`adb logcat -d -s Zesfit:V`, lines `P2P tx` / `P2P rx` / `Health metric` / `Healthy Living` / `Courses`).
 
 `34/01` TLV (GB `P2P.java`): `01` cmd (1 ping, 2 data, 3 answer, 4 get app version), `02` sequence (i16), `03` source package, `04` destination package, `05` / `06`
 source / destination fingerprint (cmd 2 only), `07` payload, `08` answer code (a byte from the watch, an int from the phone). Phone package is `hw.unitedevice.<module>`, local
@@ -675,12 +675,12 @@ NoticeBody { repeated ReportNotice notices = 1 }  ReportNotice { int32 recordDay
 `msgVer` is a `float` (the earlier note said double). `recordDay` is `yyyyMMdd` (`DateFormatUtil.a`). Flow (*HH* `bxr`): the watch sends `Request` with `msgType` 2001; the phone answers with `Report`s
 (`msgType` 2001, same `msgVer`, `msgBody` = TaskBody) on the same module, no ping needed; `packageSize` (only honoured from `msgVer` 3.0) pages the tasks: every report repeats the header and clover,
 tasks fill it until the size (Huawei counts hex characters, so half of `packageSize` is used as the byte budget). Unasked, Huawei pings the watch app (`0xca`), waits 1 s and sends the day again after data changed,
-but only once a request has told it `msgVer`; JoyoFit does the same after each sync (`push`). Other `msgType`s are logged and ignored (HH does the same).
+but only once a request has told it `msgVer`; Zesfit does the same after each sync (`push`). Other `msgType`s are logged and ignored (HH does the same).
 
 Task ids on the wire are `WearTaskEnum`: 1 perfect clover, 2 steps, 3 exercise minutes, 5 relaxation, 6 wake-up, 7 bedtime, 10 water, 11 medicine, 12 blood pressure, 14 weight, 15 active calories,
-16 active hours, 17 calorie intake, 18 sleep duration, 19 pressure. JoyoFit sends the ones it has data for (UNVERIFIED how the watch draws them):
+16 active hours, 17 calorie intake, 18 sleep duration, 19 pressure. Zesfit sends the ones it has data for (UNVERIFIED how the watch draws them):
 
-| id | Value / target | JoyoFit source |
+| id | Value / target | Zesfit source |
 |---|---|---|
 | 1 | status = all others done; `taskTarget` = their ids written one after the other (HH `bxc.c`) | |
 | 2 | steps / goal (`progress = max(value/target, 0.1)`, HH `bxc.a`); `taskType` 1 | `step_samples` of the day / profile step goal (8000 when none) |
@@ -688,11 +688,11 @@ Task ids on the wire are `WearTaskEnum`: 1 perfect clover, 2 steps, 3 exercise m
 | 18 | seconds / 8 h | `sleep_segments` ending that day, awake spans excluded |
 | 17 | kcal / 2000, done when anything was eaten | `diet_day.meals_json` kcal sum |
 | 14, 12 | times / 1 | not sent unless data exists: weight is not wired yet, blood pressure only if the watch syncs class 10002 |
-| 10 | water | **not sent**: JoyoFit records no water |
+| 10 | water | **not sent**: Zesfit records no water |
 
-`allTasks` = `"1,"` + every task id of the day, `completedTasks` = ids with `status` > 0. Goals other than the step goal are fixed (JoyoFit has no goal editor for them).
+`allTasks` = `"1,"` + every task id of the day, `completedTasks` = ids with `status` > 0. Goals other than the step goal are fixed (Zesfit has no goal editor for them).
 
-Clover: for a watch without bit 303 Huawei fills `top` = steps value / target (capped at 1) and `left` / `right` from the wake-up-time and relaxation / pressure tasks (*HH* `bxc.b`). JoyoFit has no wake-up
+Clover: for a watch without bit 303 Huawei fills `top` = steps value / target (capped at 1) and `left` / `right` from the wake-up-time and relaxation / pressure tasks (*HH* `bxc.b`). Zesfit has no wake-up
 plan or relaxation task, so its mapping is a **documented substitution, UNVERIFIED**: `left` = sleep seconds / 8 h (capped), `right` = 1 when a stress / emotion reading exists that day, else 0; `bottom` stays 0 (HH
 only fills it on four-leaf watches, bit 303).
 
@@ -713,19 +713,19 @@ ActionInfo  { string actionId = 1; uint32 measurementType = 2; uint32 measuremen
 
 Values from Huawei's own custom-course editor (*HH* `CustomCourseActivity`, `EditDialogBuilder`, `TypeConfig`): `courseType` 4, `defineType` 1, `exerciseVersion` "2.0", `usingType` 0; target types 1 time (seconds),
 0 distance (metres), 3 calories, 5 heart rate, 255 none; intensity types 255 none, 15 pace (`valueL` / `valueH` = faster / slower bound in seconds per km × 1000), 1 heart-rate range (percent of maximum, 20 to 100), 16 cadence
-(steps per minute), 13 pace zone, 17 heart-rate zone; action ids `RD001` warm-up, `RD002` run, `RD003` walk, `RD004` rest, `RD005` relax (cool-down). The JoyoFit editor offers warm-up / run / walk / rest / cool-down steps,
+(steps per minute), 13 pace zone, 17 heart-rate zone; action ids `RD001` warm-up, `RD002` run, `RD003` walk, `RD004` rest, `RD005` relax (cool-down). The Zesfit editor offers warm-up / run / walk / rest / cool-down steps,
 time or distance targets, pace / heart-rate % / cadence intensity and repeat groups; unit-tested bytes are in `P2pTest`.
 
 **What is missing, so the flow cannot be called complete (the screen stays behind an experimental switch):**
-1. How the watch acknowledges: HH registers a receiver (`dfs`) by business type and message id whose class was not dumped; JoyoFit logs any watch message of the module and the `28/07` status, nothing is interpreted.
-2. `totalMeasurementType` / `totalMeasurementValue` and `difficult` come from `FitWorkout` fields set by code that was not read; JoyoFit sends total time, total distance or none, and difficulty 0 (UNVERIFIED).
+1. How the watch acknowledges: HH registers a receiver (`dfs`) by business type and message id whose class was not dumped; Zesfit logs any watch message of the module and the `28/07` status, nothing is interpreted.
+2. `totalMeasurementType` / `totalMeasurementValue` and `difficult` come from `FitWorkout` fields set by code that was not read; Zesfit sends total time, total distance or none, and difficulty 0 (UNVERIFIED).
 3. Whether the Fit 4 Pro's fitness app takes a course without the earlier plan handshake (business type 1, `PlanShakeHandsInfo{language, planId, punchTimeStamp, weekStartTime}`) and without the server-side course catalogue is unknown.
-4. The meaning of intensity types 13 / 17 (zones) and of `instensityValueH/L` for heart-rate range (percent vs bpm) was not confirmed; JoyoFit never sends zones.
+4. The meaning of intensity types 13 / 17 (zones) and of `instensityValueH/L` for heart-rate range (percent vs bpm) was not confirmed; Zesfit never sends zones.
 5. Plans (business types 2, 7, 21, 22) and the DataSync trigger `800200002` (ExpandCapability 295, not set on our watch) are not implemented.
 
 ### Device test steps
 
-1. Connect, tap **Sync now** and read `adb logcat -d -s JoyoFit:V | grep -E "P2P|Health metric|Healthy Living|Courses"`. Expected: `P2P: SupportedCommands 34/01=true; registering P2P services`, `P2P dictionary sync: ping answered 0xca`,
+1. Connect, tap **Sync now** and read `adb logcat -d -s Zesfit:V | grep -E "P2P|Health metric|Healthy Living|Courses"`. Expected: `P2P: SupportedCommands 34/01=true; registering P2P services`, `P2P dictionary sync: ping answered 0xca`,
    one `Health metric <name> (dictionary class N): gate ExpandCapability … = true|false` line per class, then `Health metrics: syncing …` / `… entries` / `… rows stored`, and `Healthy Living: ping of com.huawei.health.healthyliving answered 0xca`.
 2. Open **Healthy Living** on the watch. Expected: `Healthy Living: request payload … bytes`, `request msgType=2001 msgVer=…`, `reporting (request) day … in N report(s)`, and `report 1/N acknowledged by the watch with 0xcf`.
    If the watch shows nothing, the log has both sides of the exchange; the request bytes are enough to correct the schema.

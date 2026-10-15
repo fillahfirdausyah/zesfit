@@ -4,8 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * JoyoFit Studio tokens. Structure from JoyoRogo's design v2 (apps/web + packages/ui globals.css):
- * warm paper canvas, borderless white cards, big radii, Plus Jakarta Sans. Palette from JoyoFit mobile
+ * Zesfit Studio tokens. Structure from JoyoRogo's design v2 (apps/web + packages/ui globals.css):
+ * warm paper canvas, borderless white cards, big radii, Plus Jakarta Sans. Palette from Zesfit mobile
  * (src/theme.ts): ink teal primary, and per-metric data colors that only tell the data sources apart
  * (steps teal, heart rose, calories amber, battery green). `stage` is the dark "watch glass" the face
  * is previewed on, in both themes.

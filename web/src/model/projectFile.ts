@@ -3,7 +3,7 @@ import { PROJECT_VERSION, type Element, type Project } from "./types";
 
 /** `.json` project file: the project plus every uploaded image it uses, embedded as data URLs. */
 export interface ProjectFile {
-  format: "joyofit-studio-project";
+  format: "zesfit-studio-project";
   project: Project;
   assets: Record<string, { name: string; dataUrl: string }>;
 }
@@ -22,7 +22,7 @@ export function assetIdsOf(project: Project): string[] {
 
 export async function serializeProject(project: Project): Promise<string> {
   const file: ProjectFile = {
-    format: "joyofit-studio-project",
+    format: "zesfit-studio-project",
     project,
     assets: await assetsToDataUrls(assetIdsOf(project)),
   };
@@ -48,8 +48,8 @@ export async function parseProjectFile(text: string): Promise<Project> {
     throw new ProjectFileError("This file is not valid JSON.");
   }
   const file = raw as Partial<ProjectFile>;
-  if (file?.format !== "joyofit-studio-project" || typeof file.project !== "object" || file.project === null) {
-    throw new ProjectFileError("This is not a JoyoFit Studio project file.");
+  if (file?.format !== "zesfit-studio-project" || typeof file.project !== "object" || file.project === null) {
+    throw new ProjectFileError("This is not a Zesfit Studio project file.");
   }
   const project = file.project;
   if (project.version !== PROJECT_VERSION) {

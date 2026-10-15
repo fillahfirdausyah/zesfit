@@ -1,14 +1,12 @@
-# JoyoFit Studio
+# Zesfit Studio
 
 A watch-face editor for the Huawei Watch Fit 4 and Fit 4 Pro (408 × 480, screen code `HWHD13`). It runs in the browser,
-renders every digit, hand, ring and icon to a bitmap, and writes a `.hwt` package that JoyoFit installs from
+renders every digit, hand, ring and icon to a bitmap, and writes a `.hwt` package that Zesfit installs from
 **Watch faces → Install from file**. Nothing is uploaded: the Worker only serves static files.
-
-Live: https://joyofit-studio.dzulfikar-at.workers.dev
 
 Stack: Vite 8, React 19, Tailwind v4, zustand, `@cloudflare/vite-plugin` (a Worker with static assets, no bindings),
 and [`packages/hwt`](../packages/hwt) for the `.hwt` format. Design: JoyoRogo's tokens and components (paper canvas,
-borderless white cards, big radii, Plus Jakarta Sans) with JoyoFit's ink-teal primary and per-metric data colors from
+borderless white cards, big radii, Plus Jakarta Sans) with Zesfit's ink-teal primary and per-metric data colors from
 `src/theme.ts`. The copied JoyoRogo files say where they came from in a header comment (`src/ui/*`, `src/styles.css`).
 
 ## Develop
@@ -21,15 +19,15 @@ bun run typecheck
 bun run test           # vitest, runs in node with @napi-rs/canvas
 bunx playwright install chromium   # once
 bun run test:e2e       # Playwright against a local dev server on :4173
-STUDIO_URL=https://joyofit-studio.dzulfikar-at.workers.dev bun run test:e2e   # the same tests against a deployment
+STUDIO_URL=https://<your-deployment> bun run test:e2e   # the same tests against a deployment
 bun run build          # tsc --noEmit && vite build, output in dist/
 bunx wrangler deploy --dry-run
 bun run deploy         # build + wrangler deploy
 ```
 
-`wrangler.jsonc` pins the Cloudflare account and the Worker name `joyofit-studio`. The Vite plugin writes
+`wrangler.jsonc` pins the Cloudflare account and the Worker name `zesfit-studio`. The Vite plugin writes
 `dist/wrangler.json` and a `.wrangler/deploy/config.json` redirect, so `wrangler deploy` ships `dist/`.
-`@joyofit/hwt` is an alias to `../packages/hwt/src/index.ts` (Vite, Vitest and `tsconfig.json`); there is no workspace
+`@zesfit/hwt` is an alias to `../packages/hwt/src/index.ts` (Vite, Vitest and `tsconfig.json`); there is no workspace
 dependency and no copy of the codec.
 
 ## How it works

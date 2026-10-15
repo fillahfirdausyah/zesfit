@@ -1,5 +1,11 @@
-JoyoFit
-Copyright (C) 2026 dzulfikar08
+Zesfit
+Copyright (C) 2026 Fillah Akbar Firdausyah
+
+Zesfit is a modified version of JoyoFit (https://github.com/dzulfikar08/joyofit),
+upstream commit 6242092fec847b8e2b8588eb3ea885d7f5b5e6e4.
+JoyoFit is Copyright (C) 2026 dzulfikar08. Changes: renamed to Zesfit (app id com.fillx.zesfit,
+Kotlin package com.fillx.zeswear), and the JoyoFit cloud sync and JoyoRogo meals/scores
+integration removed.
 
 This program is free software: you can redistribute it and/or modify it under the terms of the
 GNU Affero General Public License as published by the Free Software Foundation, either version 3
@@ -7,7 +13,8 @@ of the License, or (at your option) any later version. See LICENSE.
 
 The Huawei protocol implementation in
 modules/huawei-wear/android/src/main/java/nodomain/freeyourgadget/gadgetbridge/
-and the Kotlin session layer in modules/huawei-wear/android/src/main/java/com/joyodigitama/huaweiwear/
+and the Kotlin session layer in modules/huawei-wear/android/src/main/java/com/fillx/zeswear/
+(formerly com/joyodigitama/huaweiwear/ in JoyoFit)
 are derived from Gadgetbridge (https://codeberg.org/Freeyourgadget/Gadgetbridge),
 upstream commit bb7a1e83a29837153bf0c3a50e9869dec3dac0dd, licensed AGPL-3.0-or-later.
 Original copyright notices are retained in each ported file; modified files carry a

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { EMPTY_DRAFT, reviveDraft, type CourseDraft } from '@/features/courses/courseModel';
 import { errorMessage } from '@/format';
 
-const KEY = 'joyofit.courseDraft.v1';
+const KEY = 'zesfit.courseDraft.v1';
 const SAVE_DELAY_MS = 400;
 
 /**

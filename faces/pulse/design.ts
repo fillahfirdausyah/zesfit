@@ -1,5 +1,5 @@
 /**
- * JoyoFit Pulse: design constants and the layout arithmetic (positions in 408 x 480 watch pixels).
+ * Zesfit Pulse: design constants and the layout arithmetic (positions in 408 x 480 watch pixels).
  *
  * Palette = the dark palette of src/theme.ts: ink-teal primary `#58C4DE` is the steps colour and the only accent, heart is
  * rose, battery/link is green; chips use the theme's `*Soft` tints. The time is a warm paper white (JoyoRogo's warmth

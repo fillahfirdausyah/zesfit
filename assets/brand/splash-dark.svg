@@ -1,0 +1,5 @@
+<!-- Dark splash mark, 1024, transparent: dark-theme primary (#58C4DE) on the #0D1112 splash. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <path d="M329 329H695L329 695" fill="none" stroke="#58C4DE" stroke-width="115" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M329 695H695" fill="none" stroke="#2BA3C4" stroke-width="115" stroke-linecap="round"/>
+</svg>

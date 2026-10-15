@@ -18,7 +18,7 @@ interface Loaded {
   image: AssetImage;
 }
 
-const DB_NAME = "joyofit-studio";
+const DB_NAME = "zesfit-studio";
 const STORE = "assets";
 const loaded = new Map<string, Loaded>();
 const listeners = new Set<() => void>();

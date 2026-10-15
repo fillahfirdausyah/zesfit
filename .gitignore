@@ -44,5 +44,4 @@ yarn-error.*
 /keystore/
 /modules/*/android/build/
 
-# Keystore backup lives outside the repo (~/.config/joyofit/keystore.tar.gpg)
 /secrets/

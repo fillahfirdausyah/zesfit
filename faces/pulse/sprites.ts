@@ -1,5 +1,5 @@
 /**
- * JoyoFit Pulse sprite catalogue.
+ * Zesfit Pulse sprite catalogue.
  *
  * Every sprite is plain SVG in 1x watch pixels (a `viewBox` of its 1x size), rasterised with @resvg/resvg-js and the
  * Plus Jakarta Sans TTFs from @expo-google-fonts. `render(scale)` re-rasterises the same SVG at `scale`x, which build.ts

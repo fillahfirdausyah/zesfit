@@ -5,7 +5,7 @@ import { PROJECT_VERSION, SCREEN_W } from "@/model/types";
 import { elementBounds } from "@/render/scene";
 import { defaultSim } from "@/render/values";
 
-const STORAGE_KEY = "joyofit-studio:project:v1";
+const STORAGE_KEY = "zesfit-studio:project:v1";
 const HISTORY_LIMIT = 100;
 const COALESCE_MS = 700;
 

@@ -1,0 +1,5 @@
+<!-- Splash mark, 1024, transparent: the icon's Z without the paper square. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <path d="M329 329H695L329 695" fill="none" stroke="#0A6580" stroke-width="115" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M329 695H695" fill="none" stroke="#2BA3C4" stroke-width="115" stroke-linecap="round"/>
+</svg>

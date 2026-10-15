@@ -19,7 +19,7 @@ import {
   type HwtPackage,
   type RgbaImage,
   type WatchfaceBinary,
-} from "@joyofit/hwt";
+} from "@zesfit/hwt";
 import { getAsset } from "@/model/assets";
 import { hwtFileName } from "@/model/defaults";
 import { SCREEN_H, SCREEN_W, type Element, type HandElement, type Project, type Sim, type WidgetSource } from "@/model/types";
@@ -457,7 +457,7 @@ export async function buildHwt(project: Project, sim: Sim, options: ExportOption
     elements: report,
     stats,
     debug: {
-      generator: "JoyoFit Studio",
+      generator: "Zesfit Studio",
       screen: FIT4_SCREEN,
       title,
       options,

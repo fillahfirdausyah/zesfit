@@ -35,7 +35,7 @@ export function newSprite(width: number, height: number): { sprite: Sprite; ctx:
   return { sprite: { width: surface.width, height: surface.height, surface }, ctx: context2d(surface) };
 }
 
-/** Non-premultiplied RGBA pixels, the layout `@joyofit/hwt` image encoding takes. */
+/** Non-premultiplied RGBA pixels, the layout `@zesfit/hwt` image encoding takes. */
 export function spriteRgba(sprite: Sprite): { width: number; height: number; data: Uint8ClampedArray } {
   const data = context2d(sprite.surface).getImageData(0, 0, sprite.width, sprite.height).data;
   return { width: sprite.width, height: sprite.height, data };

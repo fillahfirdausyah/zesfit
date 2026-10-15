@@ -1,12 +1,12 @@
 name: Watch report
-description: Help JoyoFit support your Huawei or Honor watch. Start it from the app (Watch tab, Help support your watch, Report on GitHub) so the fields below are filled in.
+description: Help Zesfit support your Huawei or Honor watch. Start it from the app (Watch tab, Help support your watch, Report on GitHub) so the fields below are filled in.
 title: "[Watch report] "
 labels: ["watch-report"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for testing JoyoFit on your watch. The app fills in the watch and the summary; the full log is on your clipboard.
+        Thanks for testing Zesfit on your watch. The app fills in the watch and the summary; the full log is on your clipboard.
         The report has no Bluetooth addresses and no serial number. Read it before you submit if you want to be sure.
   - type: input
     id: watch

@@ -7,7 +7,7 @@ import type { HrvReadingRow } from '@/db/queries';
  * differ in level, so a reading is only compared with earlier readings of the same kind.
  *
  * Recovery % = 50 + 25 * z, clamped to 1..99: your usual HRV is 50 %, one standard deviation above is 75 %. Bands follow
- * the familiar green / yellow / red split at 67 and 34. The mapping is JoyoFit's; it is not WHOOP's model.
+ * the familiar green / yellow / red split at 67 and 34. The mapping is Zesfit's; it is not WHOOP's model.
  */
 const BASELINE_DAYS = 30;
 /** Earlier readings of the same kind needed before today's is compared. */

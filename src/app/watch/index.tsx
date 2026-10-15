@@ -148,7 +148,7 @@ export default function WatchScreen() {
     <Section title="Watch details" icon="watch">
       <KeyValue icon="pricetag" label="Name" value={device.name} />
       <KeyValue icon="watch" label="Model" value={device.model ?? device.productModel} />
-      <KeyValue icon="flask" label="JoyoFit support" value={SUPPORT_LABEL[device.support]} />
+      <KeyValue icon="flask" label="Zesfit support" value={SUPPORT_LABEL[device.support]} />
       {device.model ? <KeyValue icon="hardware-chip" label="Product code" value={device.productModel} /> : null}
       <KeyValue icon="code-slash" label="Software" value={device.softwareVersion} />
       <KeyValue icon="hardware-chip" label="Hardware" value={device.hardwareVersion} />

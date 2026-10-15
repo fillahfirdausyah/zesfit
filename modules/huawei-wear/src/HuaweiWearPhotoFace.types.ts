@@ -7,7 +7,7 @@ export interface PhotoFacePhoto {
   /** The name the watch knows the photo by, `<name>.png`. Pass it to `deletePhoto`. */
   name: string;
   /**
-   * A `file://` copy kept on this phone for photos JoyoFit uploaded; null for photos that came from elsewhere, because the
+   * A `file://` copy kept on this phone for photos Zesfit uploaded; null for photos that came from elsewhere, because the
    * watch offers no preview of what it holds.
    */
   uri: string | null;

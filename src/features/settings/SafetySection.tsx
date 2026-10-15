@@ -49,7 +49,7 @@ export function SafetySection() {
           const result = await PermissionsAndroid.request(permission, {
             title: 'Send SMS for SOS',
             message:
-              'When your watch sends an SOS, JoyoFit sends the text message it asks for, from this phone and your SIM. It never sends anything else.',
+              'When your watch sends an SOS, Zesfit sends the text message it asks for, from this phone and your SIM. It never sends anything else.',
             buttonPositive: 'Allow',
             buttonNegative: 'Not now',
           });
@@ -57,7 +57,7 @@ export function SafetySection() {
           setBlocked(result === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN);
         }
         if (!granted) {
-          setError('Without the SMS permission JoyoFit cannot send the SOS text. The relay stays off.');
+          setError('Without the SMS permission Zesfit cannot send the SOS text. The relay stays off.');
           return;
         }
       }
@@ -76,7 +76,7 @@ export function SafetySection() {
             safety.fallSupported
               ? safety.smsSupported
                 ? 'The watch asks you if you are all right after a hard fall and can start an SOS.'
-                : 'The watch asks you if you are all right after a hard fall. This version of JoyoFit cannot send the SOS text.'
+                : 'The watch asks you if you are all right after a hard fall. This version of Zesfit cannot send the SOS text.'
               : `Not available: ${safety.fallNote}.`
           }
           value={safety.fallSwitch === 1}
@@ -101,9 +101,9 @@ export function SafetySection() {
       {safety.smsSupported ? (
         <Section title="SOS text messages" icon="alert-circle" tint="heart">
           <AppText variant="caption" muted>
-            When you start an SOS on the watch, the watch hands this phone a number and a message. With the switch on, JoyoFit sends
+            When you start an SOS on the watch, the watch hands this phone a number and a message. With the switch on, Zesfit sends
             that text from your SIM and tells the watch whether it went out. The watch (or its emergency contacts in the Huawei
-            settings on it) decides who is texted; JoyoFit never picks a recipient and never sends anything the watch did not ask for.
+            settings on it) decides who is texted; Zesfit never picks a recipient and never sends anything the watch did not ask for.
           </AppText>
           <SwitchRow
             icon="chatbubble-ellipses"
@@ -146,8 +146,8 @@ export function SafetySection() {
       ) : (
         <Section title="SOS text messages" icon="alert-circle" tint="heart">
           <AppText variant="caption" muted>
-            Not available in the Google Play version of JoyoFit: Google Play restricts apps that send text messages, so this version
-            does not include the feature. An SOS started on the watch is not sent as an SMS from this phone: JoyoFit tells the watch
+            Not available in the Google Play version of Zesfit: Google Play restricts apps that send text messages, so this version
+            does not include the feature. An SOS started on the watch is not sent as an SMS from this phone: Zesfit tells the watch
             that nothing was sent. Do not rely on the watch to text your contacts.
           </AppText>
         </Section>

@@ -11,7 +11,7 @@ describe("project file", () => {
 
   it("rejects files that are not projects", async () => {
     await expect(parseProjectFile("not json")).rejects.toBeInstanceOf(ProjectFileError);
-    await expect(parseProjectFile(JSON.stringify({ hello: 1 }))).rejects.toThrow(/not a JoyoFit Studio project/);
+    await expect(parseProjectFile(JSON.stringify({ hello: 1 }))).rejects.toThrow(/not a Zesfit Studio project/);
     const file = JSON.parse(await serializeProject(emptyProject()));
     file.project.version = 99;
     await expect(parseProjectFile(JSON.stringify(file))).rejects.toThrow(/version 99/);

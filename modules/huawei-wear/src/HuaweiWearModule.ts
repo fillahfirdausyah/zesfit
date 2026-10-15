@@ -40,7 +40,7 @@ import type { CoursesStatus, HealthyLivingStatus, RunningCourse, RunningCoursePu
 declare class HuaweiWearModule extends NativeModule<HuaweiWearModuleEvents> {
   /**
    * Which build this is. `play` (Google Play) has no SEND_SMS, READ_CALL_LOG or READ_CONTACTS, so SOS texts and caller
-   * names are not available; `sideload` is the APK from the website or a self-build. Set by `JOYOFIT_DISTRIBUTION` at build time.
+   * names are not available; `sideload` is the APK from the website or a self-build. Set by `ZESFIT_DISTRIBUTION` at build time.
    */
   readonly distribution: 'play' | 'sideload';
   /** Bonded Bluetooth devices, each with the support level of its model. Requires BLUETOOTH_CONNECT on Android 12+. */
@@ -301,7 +301,7 @@ declare class HuaweiWearModule extends NativeModule<HuaweiWearModuleEvents> {
   logCycleDay(day: string, flow: number, cramps: number): Promise<void>;
 
   /**
-   * Stores the day (the latest one only; JoyoRogo is the source of truth, so the day's meals are replaced, but a watch
+   * Stores the day (the latest one only; JS is the source of truth, so the day's meals are replaced, but a watch
    * quick-logged meal not yet confirmed by `markWatchMealsSynced` is kept) and, when the watch is connected, pushes the goals
    * (configs 900300023 / 900300022) and the day's meal slots (SamplePoint 600002). Also sent on every connect and when the watch
    * asks. Resolves true when it reached the watch, false when stored only. Rejects with ERR_INVALID_ARGUMENT for a bad date,
@@ -311,7 +311,7 @@ declare class HuaweiWearModule extends NativeModule<HuaweiWearModuleEvents> {
   getDietStatus(): DietStatus;
   /** Sends the stored day again (goals and meals). Resolves true when it reached the watch. */
   pushDietNow(): Promise<boolean>;
-  /** JS wrote these watch-logged meals (`onWatchMealLogged`) to JoyoRogo; native stops keeping them apart. */
+  /** JS wrote these watch-logged meals (`onWatchMealLogged`) to its store; native stops keeping them apart. */
   markWatchMealsSynced(ids: string[]): Promise<void>;
 
   getBodyMetrics(): BodyMetrics;

@@ -1,5 +1,5 @@
 /**
- * The JoyoFit Studio document model. Everything here is plain JSON so a project can be autosaved, undone
+ * The Zesfit Studio document model. Everything here is plain JSON so a project can be autosaved, undone
  * (snapshots are cheap because updates are immutable) and exported as a `.json` file.
  *
  * Coordinates are watch pixels on the 408 x 480 screen of the Watch Fit 4 / Fit 4 Pro (GB code HWHD13).

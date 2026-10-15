@@ -1,6 +1,6 @@
 {
   "platforms": ["android"],
   "android": {
-    "modules": ["com.joyodigitama.huaweiwear.HuaweiWearModule"]
+    "modules": ["com.fillx.zeswear.HuaweiWearModule"]
   }
 }

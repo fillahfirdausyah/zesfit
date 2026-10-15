@@ -137,7 +137,7 @@ export function CycleScreen() {
           </>
         ) : (
           <AppText variant="caption" muted>
-            Log the first day of a period and JoyoFit estimates the next one. With one cycle it assumes 28 days, with more it
+            Log the first day of a period and Zesfit estimates the next one. With one cycle it assumes 28 days, with more it
             averages them.
           </AppText>
         )}

@@ -1,7 +1,7 @@
 import type { WorkoutPointRow } from '@/db/queries';
 
 /**
- * Fat and carbohydrate burned, estimated by JoyoFit (the watch reports neither). Same model as the live screen
+ * Fat and carbohydrate burned, estimated by Zesfit (the watch reports neither). Same model as the live screen
  * (`SubstrateEstimator` in LiveWorkoutCodec.kt): %HRmax to %VO2max after Swain (1994), a respiratory exchange ratio curve
  * through typical values (Romijn 1993, Achten 2003), fat share of energy `(1 - RER) / 0.3`, 9 kcal per gram of fat and 4
  * per gram of carbohydrate.

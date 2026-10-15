@@ -1,5 +1,5 @@
 import { createCanvas, ImageData } from "@napi-rs/canvas";
-import { VALUE_TYPE, decodeImage, describeLayout, getLayout, readHwt, type NamedObject, type RgbaImage } from "@joyofit/hwt";
+import { VALUE_TYPE, decodeImage, describeLayout, getLayout, readHwt, type NamedObject, type RgbaImage } from "@zesfit/hwt";
 import { describe, expect, it } from "vitest";
 import { SCREEN_H, SCREEN_W } from "@/model/types";
 import { renderProjectSprite, handAngle } from "@/render/scene";

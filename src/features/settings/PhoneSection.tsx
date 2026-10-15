@@ -100,7 +100,7 @@ export function PhoneSection() {
         hint={
           features.callerIdSupported
             ? 'Without call log access Android hides the caller number. Without contacts access you see the number instead of the name.'
-            : 'The watch shows that the phone is ringing. This version of JoyoFit does not read your call log or contacts, so it cannot show who is calling.'
+            : 'The watch shows that the phone is ringing. This version of Zesfit does not read your call log or contacts, so it cannot show who is calling.'
         }
         value={features.callsEnabled}
         onValueChange={toggleCalls}

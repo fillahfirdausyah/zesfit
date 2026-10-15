@@ -5,7 +5,7 @@ import { Ring } from '@/components/Ring';
 import type { SleepScoreRow } from '@/db/queries';
 import { useColors } from '@/theme';
 
-/** The watch's sleep score out of 100 as a ring. The number is the watch's; JoyoFit does not compute one. */
+/** The watch's sleep score out of 100 as a ring. The number is the watch's; Zesfit does not compute one. */
 export function SleepScoreRing({ score, size = 76 }: { score: SleepScoreRow; size?: number }) {
   const colors = useColors();
   return (

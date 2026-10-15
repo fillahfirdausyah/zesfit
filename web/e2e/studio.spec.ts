@@ -1,9 +1,9 @@
 import { readFile } from "node:fs/promises";
 import { expect, test, type Page } from "@playwright/test";
-import { decodeImage, readHwt, verifyWatchface, writeWatchface } from "@joyofit/hwt";
+import { decodeImage, readHwt, verifyWatchface, writeWatchface } from "@zesfit/hwt";
 
 async function open(page: Page): Promise<void> {
-  await page.addInitScript(() => localStorage.setItem("joyofit-studio:help-seen", "1"));
+  await page.addInitScript(() => localStorage.setItem("zesfit-studio:help-seen", "1"));
   await page.goto("/");
   await expect(page.getByTestId("face-canvas")).toBeVisible();
 }
@@ -53,7 +53,7 @@ test("debug layout and project JSON downloads", async ({ page }) => {
   expect(layout.layout.element.length).toBeGreaterThan(0);
   const project = await download(page, () => page.getByTestId("export-project-json").click());
   const parsed = JSON.parse(Buffer.from(project.bytes).toString("utf8"));
-  expect(parsed.format).toBe("joyofit-studio-project");
+  expect(parsed.format).toBe("zesfit-studio-project");
   expect(parsed.project.elements.length).toBeGreaterThan(1);
 });
 

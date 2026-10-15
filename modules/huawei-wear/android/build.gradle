@@ -3,29 +3,29 @@ plugins {
   id 'expo-module-gradle-plugin'
 }
 
-group = 'com.joyodigitama.huaweiwear'
+group = 'com.fillx.zeswear'
 version = '0.1.0'
 
-// "play" for Google Play builds (JOYOFIT_DISTRIBUTION=play or -PjoyofitDistribution=play), "sideload" otherwise.
+// "play" for Google Play builds (ZESFIT_DISTRIBUTION=play or -PzesfitDistribution=play), "sideload" otherwise.
 // Play builds drop SEND_SMS, READ_CALL_LOG and READ_CONTACTS (src/play/AndroidManifest.xml) and the code that needs them
 // switches itself off (Distribution.kt).
-def joyofitDistribution = (findProperty('joyofitDistribution') ?: System.getenv('JOYOFIT_DISTRIBUTION') ?: 'sideload').toString().toLowerCase()
-if (!(joyofitDistribution in ['play', 'sideload'])) {
-  throw new GradleException("JOYOFIT_DISTRIBUTION must be 'play' or 'sideload', got '${joyofitDistribution}'")
+def zesfitDistribution = (findProperty('zesfitDistribution') ?: System.getenv('ZESFIT_DISTRIBUTION') ?: 'sideload').toString().toLowerCase()
+if (!(zesfitDistribution in ['play', 'sideload'])) {
+  throw new GradleException("ZESFIT_DISTRIBUTION must be 'play' or 'sideload', got '${zesfitDistribution}'")
 }
 
 android {
-  namespace "com.joyodigitama.huaweiwear"
+  namespace "com.fillx.zeswear"
   defaultConfig {
     versionCode 1
     versionName "0.1.0"
-    buildConfigField "String", "DISTRIBUTION", "\"${joyofitDistribution}\""
+    buildConfigField "String", "DISTRIBUTION", "\"${zesfitDistribution}\""
   }
   buildFeatures {
     buildConfig true
   }
   sourceSets {
-    if (joyofitDistribution == 'play') {
+    if (zesfitDistribution == 'play') {
       debug.manifest.srcFile 'src/play/AndroidManifest.xml'
       release.manifest.srcFile 'src/play/AndroidManifest.xml'
     }

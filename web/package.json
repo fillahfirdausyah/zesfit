@@ -1,10 +1,10 @@
 {
-  "name": "joyofit-studio",
+  "name": "zesfit-studio",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "license": "AGPL-3.0-or-later",
-  "description": "JoyoFit Studio: a web watch-face editor that exports Huawei .hwt files for the Watch Fit 4 / Fit 4 Pro.",
+  "description": "Zesfit Studio: a web watch-face editor that exports Huawei .hwt files for the Watch Fit 4 / Fit 4 Pro.",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",

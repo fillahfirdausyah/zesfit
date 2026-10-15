@@ -2,12 +2,12 @@ import { startOfLocalDay } from '@/features/today/stats';
 import type { StepSample } from '@/wear';
 
 /**
- * Daily strain, computed by JoyoFit from the watch's stored heart rate (the watch has no such number).
+ * Daily strain, computed by Zesfit from the watch's stored heart rate (the watch has no such number).
  *
  * Load is Edwards' summated-heart-rate-zone TRIMP (Edwards 1993): minutes in 50-60 / 60-70 / 70-80 / 80-90 / 90-100 % of
  * maximum heart rate count 1 / 2 / 3 / 4 / 5 times. Strain maps that load onto 0..21 with `21 * (1 - e^(-TRIMP / 250))`,
  * so easy minutes add a lot early in the day and the top is hard to reach. The 0..21 range copies the idea of WHOOP's
- * strain scale; the curve and its constant are JoyoFit's own and are not WHOOP's model. An hour of brisk walking
+ * strain scale; the curve and its constant are Zesfit's own and are not WHOOP's model. An hour of brisk walking
  * (zone 2, TRIMP 120) is about 8; an hour of steady running (zone 3, 180) about 11; two hard hours (480) about 18.
  */
 export const STRAIN_MAX = 21;

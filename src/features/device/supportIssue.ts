@@ -1,6 +1,6 @@
 import type { SupportReport } from '@/wear';
 
-export const REPO_URL = 'https://github.com/dzulfikar08/joyofit';
+export const REPO_URL = 'https://github.com/fillahfirdausyah/zesfit';
 
 /** Browsers and GitHub start refusing long links around 8 KB; the summary is cut to stay well under it. */
 const MAX_URL = 7000;
@@ -33,7 +33,7 @@ export function issueUrl(report: SupportReport): string {
       '```',
       '',
       '### Log',
-      '<!-- JoyoFit copied the full report to your clipboard. Paste it between the fences. -->',
+      '<!-- Zesfit copied the full report to your clipboard. Paste it between the fences. -->',
       '```',
       '',
       '```',

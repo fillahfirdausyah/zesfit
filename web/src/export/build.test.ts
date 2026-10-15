@@ -13,7 +13,7 @@ import {
   verifyWatchface,
   writeWatchface,
   type NamedObject,
-} from "@joyofit/hwt";
+} from "@zesfit/hwt";
 import { describe, expect, it } from "vitest";
 import { emptyProject, newDate, newHand, newImage, newRing, newTime, newWidget } from "@/model/defaults";
 import type { Element, Project } from "@/model/types";

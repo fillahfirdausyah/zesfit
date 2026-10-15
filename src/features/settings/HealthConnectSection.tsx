@@ -21,7 +21,7 @@ const AVAILABILITY_TEXT: Record<HealthConnectStatus['availability'], string> = {
 const RECORD_TYPE_COUNT = 8;
 
 /**
- * Write the watch data to Health Connect so other apps (JoyoRogo, for one) can read it. The export
+ * Write the watch data to Health Connect so other apps can read it. The export
  * itself runs in native code after every sync, also when the app is closed; this section only
  * asks for the write permissions, flips the switch and starts the backfill.
  */
@@ -60,7 +60,7 @@ export function HealthConnectSection() {
       }
       const afterRequest = await HuaweiWear.requestHealthConnectPermissions();
       if (afterRequest.granted.length === 0) {
-        setError('No write permission was granted. Allow JoyoFit in Health Connect to turn this on.');
+        setError('No write permission was granted. Allow Zesfit in Health Connect to turn this on.');
         return;
       }
       setBusy('Writing stored data');
@@ -78,7 +78,7 @@ export function HealthConnectSection() {
         hint={
           status && unavailable
             ? AVAILABILITY_TEXT[status.availability]
-            : 'Sends steps, distance, calories, heart rate, blood oxygen, sleep and workouts after every sync, so other apps such as JoyoRogo can read them. Turning it on also writes what is already stored.'
+            : 'Sends steps, distance, calories, heart rate, blood oxygen, sleep and workouts after every sync, so other apps can read them. Turning it on also writes what is already stored.'
         }
         value={status?.enabled ?? false}
         onValueChange={toggle}

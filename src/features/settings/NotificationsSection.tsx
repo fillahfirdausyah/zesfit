@@ -15,8 +15,8 @@ const RUNTIME_NOTIFICATION_API = 33;
 
 /** Shown before Android's notification-access screen: what is read, where it goes, what is kept. */
 const DISCLOSURE =
-  'JoyoFit reads the notifications on this phone (app name, title and text) so it can show them on your watch. ' +
-  'They are sent to the watch over Bluetooth only. JoyoFit does not store them and does not send them over the internet. ' +
+  'Zesfit reads the notifications on this phone (app name, title and text) so it can show them on your watch. ' +
+  'They are sent to the watch over Bluetooth only. Zesfit does not store them and does not send them over the internet. ' +
   'You can choose which apps are forwarded, and turn this off at any time.';
 
 export function NotificationsSection() {

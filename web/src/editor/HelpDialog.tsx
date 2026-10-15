@@ -5,8 +5,8 @@ import { SHORTCUTS } from "./shortcuts";
 const STEPS = [
   { title: "Design the face here", body: "Start from a template or an empty face. Add time, date, hands, data and rings, and check them against the simulated watch." },
   { title: "Export the .hwt", body: "Press Export .hwt, read the checklist, then download. The file name keeps letters and digits only, as Huawei requires." },
-  { title: "Move it to your phone", body: "Send the file to the phone that runs JoyoFit: cloud drive, cable or any messenger." },
-  { title: "Install from JoyoFit", body: "Open JoyoFit, go to Settings or Watch, then Watch faces, then Install from file, and pick the .hwt. The upload takes a minute." },
+  { title: "Move it to your phone", body: "Send the file to the phone that runs Zesfit: cloud drive, cable or any messenger." },
+  { title: "Install from Zesfit", body: "Open Zesfit, go to Settings or Watch, then Watch faces, then Install from file, and pick the .hwt. The upload takes a minute." },
 ];
 
 export function HelpDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -15,7 +15,7 @@ export function HelpDialog({ open, onClose }: { open: boolean; onClose: () => vo
       open={open}
       onClose={onClose}
       title="Make a face for your Watch Fit 4"
-      description="JoyoFit Studio draws the face in your browser and writes a Huawei .hwt file. Nothing is uploaded."
+      description="Zesfit Studio draws the face in your browser and writes a Huawei .hwt file. Nothing is uploaded."
       className="max-w-2xl"
       testId="help-dialog"
       footer={
@@ -45,7 +45,7 @@ export function HelpDialog({ open, onClose }: { open: boolean; onClose: () => vo
             Some elements are marked <span className="font-semibold">Preview only</span> or <span className="font-semibold">Unconfirmed on a watch</span>. Preview only
             elements are never exported. Unconfirmed ones use ids read from sample faces and are written only if you leave that switch on in the export dialog.
           </li>
-          <li>Back up the face you use today: the watch can be set back to a built-in face from the Watch faces screen in JoyoFit.</li>
+          <li>Back up the face you use today: the watch can be set back to a built-in face from the Watch faces screen in Zesfit.</li>
         </ul>
       </div>
 

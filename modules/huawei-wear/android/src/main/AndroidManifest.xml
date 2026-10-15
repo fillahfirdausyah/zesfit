@@ -7,7 +7,7 @@
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <uses-permission android:name="android.permission.WAKE_LOCK" />
-  <!-- Health Connect: write-only; JoyoFit never reads Health Connect. -->
+  <!-- Health Connect: write-only; Zesfit never reads Health Connect. -->
   <uses-permission android:name="android.permission.health.WRITE_STEPS" />
   <uses-permission android:name="android.permission.health.WRITE_HEART_RATE" />
   <uses-permission android:name="android.permission.health.WRITE_OXYGEN_SATURATION" />
@@ -50,14 +50,14 @@
 
   <application>
     <service
-      android:name="com.joyodigitama.huaweiwear.WatchService"
+      android:name="com.fillx.zeswear.WatchService"
       android:exported="false"
       android:foregroundServiceType="connectedDevice" />
 
     <service
-      android:name="com.joyodigitama.huaweiwear.WatchNotificationListener"
+      android:name="com.fillx.zeswear.WatchNotificationListener"
       android:exported="true"
-      android:label="JoyoFit"
+      android:label="Zesfit"
       android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
       <intent-filter>
         <action android:name="android.service.notification.NotificationListenerService" />
@@ -65,7 +65,7 @@
     </service>
 
     <receiver
-      android:name="com.joyodigitama.huaweiwear.BootReceiver"
+      android:name="com.fillx.zeswear.BootReceiver"
       android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -75,7 +75,7 @@
 
     <!-- Calls: PHONE_STATE shows incoming calls on the watch (READ_PHONE_STATE; the number also needs READ_CALL_LOG). -->
     <receiver
-      android:name="com.joyodigitama.huaweiwear.PhoneStateReceiver"
+      android:name="com.fillx.zeswear.PhoneStateReceiver"
       android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.PHONE_STATE" />
@@ -84,14 +84,14 @@
 
     <!-- Find my phone: the Stop action of its notification. -->
     <receiver
-      android:name="com.joyodigitama.huaweiwear.FindPhoneStopReceiver"
+      android:name="com.fillx.zeswear.FindPhoneStopReceiver"
       android:exported="false" />
 
     <!-- Health Connect: the privacy-policy screen its permission dialog links to (Android 13 and older). -->
     <activity
-      android:name="com.joyodigitama.huaweiwear.HealthConnectRationaleActivity"
+      android:name="com.fillx.zeswear.HealthConnectRationaleActivity"
       android:exported="true"
-      android:label="JoyoFit and Health Connect"
+      android:label="Zesfit and Health Connect"
       android:theme="@android:style/Theme.DeviceDefault.DayNight">
       <intent-filter>
         <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
@@ -100,10 +100,10 @@
 
     <!-- Android 14+: the same screen, reached through "View permission usage". -->
     <activity-alias
-      android:name="com.joyodigitama.huaweiwear.ViewPermissionUsageActivity"
+      android:name="com.fillx.zeswear.ViewPermissionUsageActivity"
       android:exported="true"
       android:permission="android.permission.START_VIEW_PERMISSION_USAGE"
-      android:targetActivity="com.joyodigitama.huaweiwear.HealthConnectRationaleActivity">
+      android:targetActivity="com.fillx.zeswear.HealthConnectRationaleActivity">
       <intent-filter>
         <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
         <category android:name="android.intent.category.HEALTH_PERMISSIONS" />

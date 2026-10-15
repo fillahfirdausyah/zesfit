@@ -1,6 +1,6 @@
 /**
  * Copied from JoyoRogo (apps/web/src/components/kit/surface.tsx): Card, SectionTitle, Segmented and
- * FieldLabel, adapted for JoyoFit Studio. Cards are white and borderless on the paper canvas.
+ * FieldLabel, adapted for Zesfit Studio. Cards are white and borderless on the paper canvas.
  */
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "./utils";

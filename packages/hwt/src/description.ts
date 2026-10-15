@@ -14,7 +14,7 @@ export interface Resolution {
   width: number;
 }
 
-/** Gadgetbridge `HuaweiWatchfaceManager.Resolution` (identical to JoyoFit's WatchfaceResolutions). */
+/** Gadgetbridge `HuaweiWatchfaceManager.Resolution` (identical to Zesfit's WatchfaceResolutions). */
 export const RESOLUTIONS: Record<string, Resolution> = Object.fromEntries(
   (
     [

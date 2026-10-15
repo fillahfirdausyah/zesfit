@@ -1,5 +1,5 @@
 /**
- * Rasterises the JoyoFit brand SVGs in assets/brand into the files app.json and the native module use.
+ * Rasterises the Zesfit brand SVGs in assets/brand into the files app.json and the native module use.
  * Run: bun scripts/build-icons.ts   (sharp is a devDependency)
  *
  * Edit the mark in assets/brand/*.svg, then re-run. Geometry is shared by hand across icon/foreground/
@@ -13,7 +13,7 @@ import sharp from 'sharp';
 const root = fileURLToPath(new URL('..', import.meta.url));
 const brand = (name: string) => join(root, 'assets/brand', name);
 const asset = (name: string) => join(root, 'assets', name);
-const drawable = join(root, 'modules/huawei-wear/android/src/main/res/drawable/ic_stat_joyofit.xml');
+const drawable = join(root, 'modules/huawei-wear/android/src/main/res/drawable/ic_stat_zesfit.xml');
 
 async function png(svg: string, size: number, out: string) {
   const source = readFileSync(brand(svg), 'utf8');
@@ -37,6 +37,8 @@ function vectorDrawable(svg: string): string {
       lines.push(`android:strokeColor="${stroke}"`, `android:strokeWidth="${attr('stroke-width')}"`);
       const cap = attr('stroke-linecap');
       if (cap) lines.push(`android:strokeLineCap="${cap}"`);
+      const join = attr('stroke-linejoin');
+      if (join) lines.push(`android:strokeLineJoin="${join}"`);
     }
     return `  <path\n${lines.map((l) => `      ${l}`).join('\n')} />`;
   });
@@ -57,5 +59,7 @@ await png('foreground.svg', 432, asset('android-icon-foreground.png'));
 await png('background.svg', 432, asset('android-icon-background.png'));
 await png('monochrome.svg', 432, asset('android-icon-monochrome.png'));
 await png('icon.svg', 48, asset('favicon.png'));
+await png('splash.svg', 1024, asset('splash-icon.png'));
+await png('splash-dark.svg', 1024, asset('splash-icon-dark.png'));
 writeFileSync(drawable, vectorDrawable(readFileSync(brand('notification.svg'), 'utf8')));
 console.log('icons built');
